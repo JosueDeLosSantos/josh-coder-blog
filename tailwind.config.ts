@@ -9,8 +9,15 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        blogBg: "var(--blog-bg)",
+        primaryBorder: "var(--primary-border)",
+        primaryLight: "var(--primary-light)",
+        primary: "var(--primary)",
+        primaryDark: "var(--primary-dark)",
+        secondary: "var(--secondary)",
+        secondaryDark: "var(--secondary-dark)",
+        text: "var(--text)",
+        textLight: "var(--text-light)",
       },
     },
   },
