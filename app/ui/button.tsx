@@ -12,7 +12,7 @@ export default function Button({
     <button
       className={clsx(
         poppins.className,
-        "text-white max-2xl:font-medium 2xl:font-semibold max-md:text-sm md:text-lg 2xl:text-xl max-md:px-4 max-md:py-1 md:px-6 md:py-2 2xl:px-8 2xl:py-3 rounded",
+        "text-white max-2xl:font-medium 2xl:font-semibold max-md:text-sm md:text-lg 2xl:text-xl max-md:px-4 max-md:py-2 md:px-6 md:py-2 2xl:px-8 2xl:py-3 rounded",
         {
           "bg-primary": bg === "primary",
           "bg-secondary": bg === "secondary",

@@ -5,6 +5,7 @@ import Logo from "@/app/ui/Logo";
 import Button from "@/app/ui/button";
 import { orbitron, oxanium, inter, poppins } from "./ui/fonts";
 import clsx from "clsx";
+import Link from "next/link";
 
 const samplePost = {
   title: "CSS quantity Queries Are Really Cool",
@@ -14,10 +15,11 @@ const samplePost = {
 
 const samplePosts = new Array(4).fill(samplePost);
 
-export default function Home() {
+export default function Hero() {
   return (
     <>
       <div className="fixed min-h-screen w-full blog-hero-bg h-screen -z-50"></div>
+      {/* This is the hero section */}
       <div className="max-md:p-4 md:p-6 2xl:p-10">
         <header className="flex justify-center">
           <Logo motto={true} mobileHero={true} />
@@ -31,7 +33,10 @@ export default function Home() {
           >
             The go-to blog for all software developers
           </div>
-          <Button message="Read Now" bg="secondary" />
+          {/* This button takes users to a list of all posts */}
+          <Link href="/blog">
+            <Button message="Read Now" bg="secondary" />
+          </Link>
           <div
             className={clsx(
               oxanium.className,
@@ -41,6 +46,7 @@ export default function Home() {
             Featured Posts
           </div>
         </div>
+        {/* This section contains Featured Posts */}
         <div className="flex flex-wrap justify-center max-2xl:gap-5 2xl:gap-6 max-md:mt-8 md:mt-10">
           {samplePosts.map((post, index) => (
             <div

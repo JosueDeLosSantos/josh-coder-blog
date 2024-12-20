@@ -3,11 +3,11 @@ import clsx from "clsx";
 
 export default function Logo({ motto = false, mobileHero = false }) {
   return (
-    <div className="flex w-fit flex-col items-center 2xl:gap-1 md:text-4xl 2xl:text-5xl">
+    <div className="flex w-fit flex-col items-center">
       <div
         className={clsx(bungee.className, "antialiased", {
-          "max-md:text-xl": !mobileHero,
-          "max-md:text-3xl": mobileHero,
+          "text-xl": !mobileHero,
+          "max-md:text-3xl 2xl:gap-1 md:text-4xl 2xl:text-5xl": mobileHero,
         })}
       >
         <span className="text-secondaryDark">{"<"}</span>
