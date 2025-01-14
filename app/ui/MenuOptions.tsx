@@ -5,12 +5,16 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 
-export default function MenubarOptions() {
+export default function MenubarOptions({ vertical }: { vertical: boolean }) {
   const pathname = usePathname();
 
   return (
     <ul
-      className={`${poppins.className} flex gap-5 font-semibold text-primary tracking-wider`}
+      className={clsx(
+        poppins.className,
+        "flex gap-5 font-semibold text-primary tracking-wider text-base",
+        { "flex-col items-start": vertical }
+      )}
     >
       <li>
         <Link href="/blog" className="flex gap-1">
@@ -33,9 +37,10 @@ export default function MenubarOptions() {
       </li>
 
       <li>
-        <Link href="/blog/signIn" className="flex gap-1">
-          {" "}
+        <Link href="/signIn" className="flex gap-1">
+          <span className="opacity-0">{"{"}</span>
           Sign In/Up
+          <span className="opacity-0">{"}"}</span>
         </Link>
       </li>
       <li>
