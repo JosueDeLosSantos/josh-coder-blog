@@ -33,10 +33,12 @@ export default function BlogLayout({
           }
         )}
       >
+        {/* Menu icon */}
         <GrClose
           onClick={() => setOpen(!open)}
           className="mb-5 ml-auto mr-8 text-xl"
         />
+        {/* Sidebar options */}
         <MenuOptions vertical={true} />
       </div>
       <div>

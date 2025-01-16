@@ -6,6 +6,9 @@ import Button from "@/app/ui/button";
 import { orbitron, oxanium, inter, poppins } from "./ui/fonts";
 import clsx from "clsx";
 import Link from "next/link";
+//sanity
+// import { defineQuery } from "next-sanity";
+// import { sanityFetch } from "@/sanity/live";
 
 const samplePost = {
   title: "CSS quantity Queries Are Really Cool",
@@ -15,7 +18,10 @@ const samplePost = {
 
 const samplePosts = new Array(4).fill(samplePost);
 
-export default function Hero() {
+export default async function Hero() {
+  // const ALL_POSTS = defineQuery(`*[_type == "post"]`);
+  // const data = await sanityFetch({ query: ALL_POSTS });
+
   return (
     <>
       <div className="fixed min-h-screen w-full blog-hero-bg h-screen -z-50"></div>
