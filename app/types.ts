@@ -98,7 +98,7 @@ export type PostType = {
   title?: string;
   slug?: Slug;
   description?: string;
-  tag?: Array<string>;
+  tag: Array<string>;
   publishedAt?: string;
   mainImage?: {
     asset?: {

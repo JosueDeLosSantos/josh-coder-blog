@@ -28,12 +28,12 @@ export function Tag({ name, amount }: { name: string; amount: number }) {
       <div
         className={clsx(
           poppins.className,
-          "text-primaryLight max-sm:text-sm border border-primaryLight px-2 rounded-l-sm"
+          "text-primaryLight max-sm:text-sm border border-primaryLight px-2 py-0.5 rounded-l-sm"
         )}
       >
         {name}
       </div>
-      <div className="text-white bg-primaryLight px-2 rounded-r-sm">
+      <div className="text-white bg-primaryLight px-2 py-0.5 rounded-r-sm">
         {amount}
       </div>
     </div>

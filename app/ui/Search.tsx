@@ -34,14 +34,14 @@ export default function Search({ placeholder }: { placeholder: string }) {
         type="text"
         maxLength={100}
         placeholder={placeholder}
-        className="w-full border-solid border pl-10 pr-16 py-1 border-primaryLight outline-none focus-visible:ring-1 focus-visible:ring-primaryLight text-textLight rounded"
+        className="w-full border-solid text-lg border pl-10 pr-16 py-1 border-primaryLight outline-none focus-visible:ring-1 focus-visible:ring-primaryLight text-textLight rounded"
         onChange={(e) => {
           handleSearch(e.target.value);
         }}
         defaultValue={searchParams.get("query")?.toString()}
       />
-      <HiMagnifyingGlass className="absolute top-0 left-0 z-10 text-2xl ml-2 mt-1 text-primaryLight" />
-      <div className="absolute top-0 right-0 mr-2 mt-1">
+      <HiMagnifyingGlass className="absolute top-0 left-0 z-10 text-2xl ml-2 mt-1.5 text-primaryLight" />
+      <div className="absolute top-0 right-0 mr-2 mt-1.5">
         <span
           className={clsx(
             "text-xs",

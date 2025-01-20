@@ -17,6 +17,7 @@ export default {
         secondary: "var(--secondary)",
         secondaryDark: "var(--secondary-dark)",
         text: "var(--text)",
+        textMild: "var(--text-mild)",
         textLight: "var(--text-light)",
       },
     },

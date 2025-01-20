@@ -12,7 +12,7 @@ export default function MenubarOptions({ vertical }: { vertical: boolean }) {
     <ul
       className={clsx(
         poppins.className,
-        "flex gap-5 font-semibold text-primary tracking-wider text-base",
+        "flex gap-5 font-semibold text-primary tracking-wider 2xl:text-base",
         { "flex-col items-start": vertical }
       )}
     >

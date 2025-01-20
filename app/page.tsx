@@ -2,25 +2,19 @@ import Image from "next/image";
 import heroImageOne from "@/public/hero-image-one.png";
 import heroImageTwo from "@/public/hero-image-two.png";
 import Logo from "@/app/ui/Logo";
-import Button from "@/app/ui/button";
+import Button from "@/app/ui/Button";
 import { orbitron, oxanium, inter, poppins } from "./ui/fonts";
 import clsx from "clsx";
 import Link from "next/link";
 //sanity
-// import { defineQuery } from "next-sanity";
-// import { sanityFetch } from "@/sanity/live";
-
-const samplePost = {
-  title: "CSS quantity Queries Are Really Cool",
-  description:
-    "Quantity queries are an incredible CSS feature that allows you to style elements based on the number of elements in a container without using any JavaScript at all.",
-};
-
-const samplePosts = new Array(4).fill(samplePost);
+import { defineQuery } from "next-sanity";
+import { sanityFetch } from "@/sanity/live";
+import { PostType } from "@/app/types";
 
 export default async function Hero() {
-  // const ALL_POSTS = defineQuery(`*[_type == "post"]`);
-  // const data = await sanityFetch({ query: ALL_POSTS });
+  const ALL_POSTS = defineQuery(`*[_type == "post"]`);
+  const data = await sanityFetch({ query: ALL_POSTS });
+  const posts: PostType[] = data.data;
 
   return (
     <>
@@ -54,9 +48,9 @@ export default async function Hero() {
         </div>
         {/* This section contains Featured Posts */}
         <div className="flex flex-wrap justify-center max-2xl:gap-5 2xl:gap-6 max-md:mt-8 md:mt-10">
-          {samplePosts.map((post, index) => (
+          {posts.slice(0, 4).map((post) => (
             <div
-              key={index}
+              key={post._id}
               className="flex flex-col gap-2 bg-white max-w-80 p-4 shadow-md rounded-lg"
             >
               <div
@@ -78,14 +72,14 @@ export default async function Hero() {
           alt="hero image one"
           width={286}
           height={325}
-          className="object-cover absolute bottom-0 left-0 opacity-40 max-sm:hidden -z-10"
+          className="object-cover fixed bottom-0 left-0 opacity-40 max-sm:hidden -z-10"
         />
         <Image
           src={heroImageTwo}
           alt="hero image two"
           width={286}
           height={325}
-          className="object-cover absolute bottom-0 right-0 opacity-40 max-sm:hidden -z-20"
+          className="object-cover fixed bottom-0 right-0 opacity-40 max-sm:hidden -z-20"
         />
       </div>
     </>
