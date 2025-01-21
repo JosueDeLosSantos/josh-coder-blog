@@ -14,10 +14,18 @@ export default async function PostsList({
   const data = await sanityFetch({ query: ALL_POSTS });
   const posts: PostType[] = data.data;
   let filteredPosts: PostType[] = [];
+
   // Searches for posts that match the tag
   if (tag.length > 0) {
     filteredPosts = posts.filter((post) => {
       return post.tag.includes(tag);
+    });
+  }
+
+  // Searches for posts that match the tag
+  if (query.length > 0) {
+    filteredPosts = posts.filter((post) => {
+      return post.title.toLowerCase().includes(query.toLowerCase());
     });
   }
 

@@ -2,6 +2,7 @@ import SearchBar from "@/app/ui/Search";
 import Tags from "@/app/ui/Tags";
 import PostsList from "@/app/ui/PostsList";
 import { Suspense } from "react";
+import ScrollUp from "../ui/ScrollUp";
 
 export default async function Home(props: {
   searchParams?: Promise<{
@@ -22,6 +23,7 @@ export default async function Home(props: {
         <Suspense fallback={<div>Loading...</div>}>
           <PostsList query={query} tag={tag} />
         </Suspense>
+        <ScrollUp />
       </div>
     </div>
   );

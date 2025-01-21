@@ -95,7 +95,7 @@ export type PostType = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
+  title: string;
   slug?: Slug;
   description?: string;
   tag: Array<string>;
