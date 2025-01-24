@@ -1,18 +1,16 @@
-import { defineQuery } from "next-sanity";
-import { sanityFetch } from "@/sanity/live";
 import { PostType } from "@/app/types";
 import Post from "@/app/ui/Post";
 
 export default async function PostsList({
+  data,
   query,
   tag,
 }: {
+  data: PostType[];
   query: string;
   tag: string;
 }) {
-  const ALL_POSTS = defineQuery(`*[_type == "post"]`);
-  const data = await sanityFetch({ query: ALL_POSTS });
-  const posts: PostType[] = data.data;
+  const posts: PostType[] = data;
   let filteredPosts: PostType[] = [];
 
   // Searches for posts that match the tag

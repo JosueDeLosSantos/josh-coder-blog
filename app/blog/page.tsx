@@ -3,6 +3,8 @@ import Tags from "@/app/ui/Tags";
 import PostsList from "@/app/ui/PostsList";
 import { Suspense } from "react";
 import ScrollUp from "../ui/ScrollUp";
+import { defineQuery } from "next-sanity";
+import { sanityFetch } from "@/sanity/live";
 
 export default async function Home(props: {
   searchParams?: Promise<{
@@ -14,6 +16,9 @@ export default async function Home(props: {
   const query = searchParams?.query || "";
   const tag = searchParams?.tag || "";
 
+  const ALL_POSTS = defineQuery(`*[_type == "post"]`);
+  const data = await sanityFetch({ query: ALL_POSTS });
+
   return (
     <div className="flex flex-col min-h-screen w-full px-8 pt-8 pb-8 md:px-20 2xl:px-40">
       <div className="w-full max-w-4xl mx-auto">
@@ -21,7 +26,7 @@ export default async function Home(props: {
         <SearchBar placeholder="Search by title" />
         <Tags />
         <Suspense fallback={<div>Loading...</div>}>
-          <PostsList query={query} tag={tag} />
+          <PostsList data={data.data} query={query} tag={tag} />
         </Suspense>
         <ScrollUp />
       </div>

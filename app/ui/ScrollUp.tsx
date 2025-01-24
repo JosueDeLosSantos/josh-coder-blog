@@ -6,7 +6,7 @@ import clsx from "clsx";
 
 export default function ScrollUp() {
   // Scrolls to the top of the page
-  const isBrowser = () => typeof window !== "undefined";
+  const isBrowser = () => typeof window !== "undefined"; //Next js recommends this approach
 
   function scrollToTop() {
     console.log(typeof window);

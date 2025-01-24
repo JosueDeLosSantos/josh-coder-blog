@@ -1,3 +1,7 @@
 {
-  "editor.pasteAs.preferences": ["text.updateImports.jsts", "uri.path.absolute"]
+  "editor.pasteAs.preferences": [
+    "text.updateImports.jsts",
+    "uri.path.absolute"
+  ],
+  "CodeGPT.apiKey": "Ollama"
 }
