@@ -3,7 +3,7 @@ import heroImageOne from "@/public/hero-image-one.png";
 import heroImageTwo from "@/public/hero-image-two.png";
 import Logo from "@/app/ui/Logo";
 import Button from "@/app/ui/Button";
-import { orbitron, oxanium, inter, poppins } from "./ui/fonts";
+import { orbitron, oxanium, inter, poppins } from "@/app/ui/fonts";
 import clsx from "clsx";
 import Link from "next/link";
 //sanity
