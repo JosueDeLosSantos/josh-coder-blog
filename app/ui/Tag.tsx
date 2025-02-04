@@ -24,7 +24,7 @@ export function Tag({ name, amount }: { name: string; amount: number }) {
   }
 
   return (
-    <div className="flex" onClick={() => handleSearch(name)}>
+    <div className="flex cursor-pointer" onClick={() => handleSearch(name)}>
       <div
         className={clsx(
           poppins.className,

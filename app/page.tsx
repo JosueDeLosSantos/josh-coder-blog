@@ -31,7 +31,7 @@ export default async function Hero() {
               "text-center max-md:text-xl md:text-3xl 2xl:text-5xl text-primary"
             )}
           >
-            The go-to blog for all software developers
+            <h1>The go-to blog for all software developers</h1>
           </div>
           {/* This button takes users to a list of all posts */}
           <Link href="/blog">
@@ -43,28 +43,32 @@ export default async function Hero() {
               "max-md:text-xl md:text-3xl 2xl:text-4xl text-text"
             )}
           >
-            Featured Posts
+            <h3>Featured Posts</h3>
           </div>
         </div>
         {/* This section contains Featured Posts */}
-        <div className="flex flex-wrap justify-center max-2xl:gap-5 2xl:gap-6 max-md:mt-8 md:mt-10">
+        <div className="flex flex-wrap justify-center gap-5 2xl:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 max-md:mt-8 md:mt-10 w-fit mx-auto">
           {posts.slice(0, 4).map((post) => (
-            <div
+            <Link
               key={post._id}
-              className="flex flex-col gap-2 bg-white max-w-80 p-4 shadow-md rounded-lg"
+              href={`/blog/${encodeURIComponent(post.slug.current)}`}
             >
-              <div
-                className={`${poppins.className} text-text font-semibold max-md:text-lg md:text-xl`}
-              >
-                <h3>{post.title}</h3>
+              <div className="flex flex-col gap-2 bg-white max-w-80 h-full p-4 shadow-md rounded-lg cursor-default">
+                <div
+                  className={`${poppins.className} text-text font-semibold max-md:text-lg md:text-xl`}
+                >
+                  <h3>{post.title}</h3>
+                </div>
+                <div className={`${inter.className} text-textLight`}>
+                  <p>{post.description}</p>
+                </div>
+                <div
+                  className={`${poppins.className} text-secondary cursor-pointer`}
+                >
+                  Read More
+                </div>
               </div>
-              <div className={`${inter.className} text-textLight`}>
-                <p>{post.description}</p>
-              </div>
-              <div className={`${poppins.className} text-secondary`}>
-                Read More
-              </div>
-            </div>
+            </Link>
           ))}
         </div>
         <Image

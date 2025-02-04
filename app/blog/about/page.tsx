@@ -7,7 +7,8 @@ import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import Image from "next/image";
 //sanity
-import { defineQuery, PortableText } from "next-sanity";
+import { defineQuery } from "next-sanity";
+import { PortableText, PortableTextReactComponents } from "@portabletext/react";
 import { sanityFetch } from "@/sanity/live";
 import { Author } from "@/app/types";
 
@@ -23,16 +24,24 @@ export default async function About() {
     projectId && dataset
       ? imageUrlBuilder({ projectId, dataset }).image(source)
       : null;
+  //@ts-expect-error no logical error
   const profileImage = urlFor(author?.image).url();
 
-  console.log(author);
+  const components: Partial<PortableTextReactComponents> = {
+    block: {
+      h4: ({ children }) => (
+        <h2 className="text-2xl font-semibold">{children}</h2>
+      ),
+      normal: ({ children }) => <p className="mb-4">{children}</p>,
+    },
+  };
 
   return (
     <div className="flex flex-col min-h-screen px-8 pb-8 pt-32 md:px-20 2xl:px-40">
       <div className="relative bg-white border border-primaryBorder rounded-lg text-center px-8 md:px-16 pb-8 pt-20 mx-auto max-w-3xl">
         <Image
           src={profileImage || "https://placehold.co/120x120/png"}
-          alt={author.name || "Event"}
+          alt={author.name || "Blog author"}
           className="absolute -top-16 left-1/2 transform -translate-x-1/2 rounded-full ring-1 ring-primaryBorder"
           height="120"
           width="120"
@@ -43,7 +52,7 @@ export default async function About() {
           </h1>
           {author?.about ? (
             <div className={`${inter.className} text-text text-left`}>
-              <PortableText value={author.about} />
+              <PortableText value={author.about} components={components} />
             </div>
           ) : null}
         </div>

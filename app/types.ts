@@ -94,8 +94,8 @@ export type Author = {
     _type: "block";
     _key: string;
   }>;
-  image?: {
-    asset?: {
+  image: {
+    asset: {
       _ref: string;
       _type: "reference";
       _weak?: boolean;
@@ -117,10 +117,10 @@ export type PostType = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title?: string;
-  slug?: Slug;
+  title: string;
+  slug: { current: string };
   description?: string;
-  tag?: Array<string>;
+  tag: Array<string>;
   publishedAt?: string;
   mainImage?: {
     asset?: {
@@ -133,7 +133,7 @@ export type PostType = {
     crop?: SanityImageCrop;
     _type: "image";
   };
-  body?: Array<
+  body: Array<
     | {
         children?: Array<{
           marks?: Array<string>;

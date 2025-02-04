@@ -1,13 +1,11 @@
-"use client";
-
 import { PostType } from "@/app/types";
 import { poppins, inter } from "./fonts";
 import clsx from "clsx";
 import { DateTime } from "luxon";
 
-export default function Post({ post }: { post: PostType }) {
+export default async function Post({ post }: { post: PostType }) {
   return (
-    <div className="flex flex-col gap-2 bg-white w-full p-4 shadow-md rounded-lg">
+    <div className="flex flex-col gap-2 bg-white w-full p-4 shadow-md rounded-lg cursor-default">
       <div
         className={`${poppins.className} text-text font-semibold max-md:text-lg md:text-xl`}
       >
@@ -23,7 +21,11 @@ export default function Post({ post }: { post: PostType }) {
       <div className={`${inter.className} text-textMild`}>
         <p>{post.description}</p>
       </div>
-      <div className={`${poppins.className} text-secondary`}>Read More</div>
+      <div
+        className={`${poppins.className} text-secondary mb-2 cursor-pointer`}
+      >
+        Read More
+      </div>
       <div className="flex flex-wrap gap-2">
         {post.tag &&
           post.tag.length &&
