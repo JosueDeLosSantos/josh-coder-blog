@@ -11,7 +11,8 @@ import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 export default async function Page({ params }: { params: { slug: string } }) {
-  const POST = defineQuery(`*[slug.current == '${params.slug}'][0]`);
+  const { slug } = await params;
+  const POST = defineQuery(`*[slug.current == '${slug}'][0]`);
   const { data: post }: { data: PostType } = await sanityFetch({ query: POST });
 
   // image builder

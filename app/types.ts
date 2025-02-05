@@ -118,7 +118,10 @@ export type PostType = {
   _updatedAt: string;
   _rev: string;
   title: string;
-  slug: { current: string };
+  slug: {
+    current: string;
+    _type: "slug";
+  };
   description?: string;
   tag: Array<string>;
   publishedAt?: string;
@@ -246,7 +249,7 @@ export type AllSanitySchemaTypes =
   | SanityFileAsset
   | Geopoint
   | Author
-  | Post
+  | PostType
   | SanityImageCrop
   | SanityImageHotspot
   | SanityImageAsset
