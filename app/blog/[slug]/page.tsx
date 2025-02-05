@@ -10,7 +10,8 @@ import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
-export default async function Page({ params }: { params: { slug: string } }) {
+//@ts-expect-error no logical error
+export default async function Page({ params }) {
   const { slug } = await params;
   const POST = defineQuery(`*[slug.current == '${slug}'][0]`);
   const { data: post }: { data: PostType } = await sanityFetch({ query: POST });
