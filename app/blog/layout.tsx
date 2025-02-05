@@ -27,7 +27,7 @@ export default function BlogLayout({
       {/* Small screens sidebar */}
       <div
         className={clsx(
-          "fixed w-1/2 top-0 bottom-0 right-0 bg-white z-20 px-2 py-8",
+          "fixed w-1/2 top-0 bottom-0 right-0 bg-white z-20 px-2 py-8 mt-[75px]",
           {
             hidden: !open,
           }
@@ -43,7 +43,7 @@ export default function BlogLayout({
       </div>
       <div>
         {/* navbar */}
-        <nav className="flex w-full justify-between items-center bg-white px-8 md:px-20 py-6 drop-shadow">
+        <nav className="fixed top-0 left-0 flex w-full justify-between items-center bg-white px-8 md:px-20 py-6 drop-shadow z-50">
           <Logo />
           {/* Large screens menu */}
           <div className="hidden lg:block">

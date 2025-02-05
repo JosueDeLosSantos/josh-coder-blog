@@ -22,7 +22,7 @@ export default async function Home(props: {
   const { data: posts } = await sanityFetch({ query: ALL_POSTS });
 
   return (
-    <div className="flex flex-col min-h-screen w-full px-8 py-8 md:px-20 2xl:px-40">
+    <div className="flex flex-col min-h-screen w-full px-8 py-8 md:px-20 2xl:px-40 mt-20">
       <div className="w-full max-w-4xl mx-auto">
         {/* Search bar */}
         <SearchBar placeholder="Search by title" />

@@ -24,7 +24,7 @@ export default async function Hero() {
         <header className="flex justify-center">
           <Logo motto={true} mobileHero={true} />
         </header>
-        <div className="flex flex-col max-md:mt-8 md:mt-28 2xl:mt-36 items-center max-md:gap-8 md:gap-10 2xl:gap-12 justify-center">
+        <div className="flex flex-col max-md:mt-8 md:mt-20 2xl:mt-36 items-center max-md:gap-8 md:gap-10 2xl:gap-12 justify-center">
           <div
             className={clsx(
               orbitron.className,
@@ -48,12 +48,12 @@ export default async function Hero() {
         </div>
         {/* This section contains Featured Posts */}
         <div className="flex flex-wrap justify-center gap-5 2xl:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 max-md:mt-8 md:mt-10 w-fit mx-auto">
-          {posts.slice(0, 4).map((post) => (
+          {posts.slice(0, 6).map((post) => (
             <Link
               key={post._id}
               href={`/blog/${encodeURIComponent(post.slug.current)}`}
             >
-              <div className="flex flex-col gap-2 bg-white max-w-80 h-full p-4 shadow-md rounded-lg cursor-default">
+              <div className="flex flex-col gap-2 bg-white max-w-80 h-full min-h-64 p-4 shadow-md rounded-lg cursor-default">
                 <div
                   className={`${poppins.className} text-text font-semibold max-md:text-lg md:text-xl`}
                 >

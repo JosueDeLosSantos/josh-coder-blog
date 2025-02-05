@@ -87,7 +87,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   return (
     <div className="w-full">
-      <div className="bg-white max-w-4xl py-4 px-8 rounded-lg cursor-default mx-auto my-10">
+      <div className="bg-white max-w-4xl py-4 px-8 rounded-lg cursor-default mx-auto my-24">
         <div className="flex flex-col gap-4 lg:gap-5">
           <div
             className={`${poppins.className} text-text font-semibold text-3xl md:text-4xl`}
@@ -119,7 +119,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
               ))}
           </div>
         </div>
-        <div className={`${inter.className} text-left mt-12`}>
+        <div className={`${inter.className} text-left mt-14`}>
           <PortableText value={post.body} components={components} />
         </div>
       </div>

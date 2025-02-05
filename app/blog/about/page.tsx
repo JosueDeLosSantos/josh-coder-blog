@@ -37,7 +37,7 @@ export default async function About() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen px-8 pb-8 pt-32 md:px-20 2xl:px-40">
+    <div className="flex flex-col min-h-screen px-8 pb-8 pt-48 md:px-20 2xl:px-40">
       <div className="relative bg-white border border-primaryBorder rounded-lg text-center px-8 md:px-16 pb-8 pt-20 mx-auto max-w-3xl">
         <Image
           src={profileImage || "https://placehold.co/120x120/png"}
