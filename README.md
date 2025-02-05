@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📝 Josh Coder Blog
 
-## Getting Started
+# 🚀 Introduction
 
-First, run the development server:
+Welcome to **Josh Coder**, a modern and fully responsive **Next.js** blog designed to showcase engaging content on **computer science and programming**. This is the **first version** of the project, featuring an **intuitive UI** inspired by a custom **Figma design system**. The blog allows users to seamlessly explore posts, search content, and navigate through various sections with ease.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+![README-beta-image.jpg](README-beta-image.jpg)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ✨ Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This version of **Josh Coder** includes four main views:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1️⃣ **Hero Page** – A welcoming homepage with featured post links for quick access.
 
-## Learn More
+2️⃣ **Posts Page** – Displays all blog posts with a **search bar** (by title) and **tag-based filtering**.
 
-To learn more about Next.js, take a look at the following resources:
+3️⃣ **Post Page** – A dynamically generated page for each post, powered by the **Next.js router**.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4️⃣ **About Page** – A section that introduces the blog’s purpose and provides contact links.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All posts and content are managed using **Sanity Headless CMS**, which provides a **cloud-based database**. The blog utilizes the **Next.js Sanity client** to fetch data efficiently from the **Sanity cloud database**.
 
-## Deploy on Vercel
+## 📖 Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Next.js** – Server-side rendering & static generation for fast performance.
+- **Sanity CMS** – Cloud-based headless CMS for managing blog content.
+- **Next.js Sanity Client** – Fetching and querying data from the Sanity database.
+- **Figma** – Custom design system for a sleek and user-friendly interface.
+- **Tailwind CSS (optional, if used)** – Responsive styling for a modern look.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔮 Future Enhancements
+
+This is just the beginning! Planned updates for future versions include:
+
+✅ **User Authentication System** – Enabling user logins and profiles.
+
+✅ **Commenting System** – Allowing readers to engage with posts.
+
+✅ **Enhanced Post Management** – Improved features for content moderation.
+
+## 📬 Contact
+
+If you have any questions, feedback, or suggestions, feel free to reach out! 🚀
+
+Let me know if you need any modifications! 😊
