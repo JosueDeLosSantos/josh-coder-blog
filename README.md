@@ -42,6 +42,6 @@ This is just the beginning! Planned updates for future versions include:
 
 ## 📬 Contact
 
-If you have any questions, feedback, or suggestions, feel free to [reach out](mailto:joshcoder2000)! 🚀
+If you have any questions, feedback, or suggestions, feel free to [reach out](mailto:joshcoder2000@gmail.com)! 🚀
 
 Let me know if you need any modifications! 😊
