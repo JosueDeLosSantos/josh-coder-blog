@@ -119,7 +119,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
               ))}
           </div>
         </div>
-        <div className={`${inter.className} text-left mt-14`}>
+        <div className={`${inter.className} text-left mt-10`}>
           <PortableText value={post.body} components={components} />
         </div>
       </div>
