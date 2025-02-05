@@ -2,7 +2,7 @@
 
 # 🚀 Introduction
 
-Welcome to **Josh Coder**, a modern and fully responsive **Next.js** blog designed to showcase engaging content on **computer science and programming**. This is the **first version** of the project, featuring an **intuitive UI** inspired by a custom **Figma design system**. The blog allows users to seamlessly explore posts, search content, and navigate through various sections with ease.
+Welcome to **Josh Coder**, a modern and fully responsive **Next.js** blog designed to showcase engaging content on **computer science and programming**. This is the **first version** of the project, featuring an **intuitive UI** inspired by [my own custom **Figma design system**](https://www.figma.com/design/DuUW9np74Jp1SGHxKcy3Gf/Blog?node-id=59-1113). The blog allows users to seamlessly explore posts, search content, and navigate through various sections with ease.
 
 ![README-beta-image.jpg](/public/README-beta-image.jpg)
 
