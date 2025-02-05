@@ -6,6 +6,8 @@ Welcome to **Josh Coder**, a modern and fully responsive **Next.js** blog design
 
 ![README-beta-image.jpg](/public/README-beta-image.jpg)
 
+[Live Preview](https://josh-coder-blog.vercel.app/)
+
 ## ✨ Features
 
 This version of **Josh Coder** includes four main views:
