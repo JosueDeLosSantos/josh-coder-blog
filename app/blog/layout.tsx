@@ -25,6 +25,7 @@ export default function BlogLayout({
             hidden: !open,
           }
         )}
+        onClick={() => setOpen(!open)}
       ></div>
       {/* Small screens sidebar */}
       <div
