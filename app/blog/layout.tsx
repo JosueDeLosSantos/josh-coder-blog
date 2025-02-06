@@ -20,14 +20,16 @@ export default function BlogLayout({
       {/* Dark Curtain */}
       <div
         className={clsx(
-          "fixed top-0 right-0 bottom-0 left-0 bg-black opacity-40 z-10",
-          { hidden: !open }
+          "fixed top-[76px] right-0 left-0 h-[calc(100vh-76px)] bg-black opacity-40 z-10",
+          {
+            hidden: !open,
+          }
         )}
       ></div>
       {/* Small screens sidebar */}
       <div
         className={clsx(
-          "fixed w-1/2 top-0 bottom-0 right-0 bg-white z-20 px-2 py-8 mt-[75px]",
+          "fixed w-1/2 top-[76px] right-0 h-[calc(100vh-76px)] bg-white z-20 px-2 py-8",
           {
             hidden: !open,
           }
