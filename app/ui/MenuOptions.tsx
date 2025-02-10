@@ -36,13 +36,13 @@ export default function MenubarOptions({ vertical }: { vertical: boolean }) {
         </Link>
       </li>
 
-      {/*  <li>
+      <li>
         <Link href="/signIn" className="flex gap-1">
           <span className="opacity-0">{"{"}</span>
           Sign In/Up
           <span className="opacity-0">{"}"}</span>
         </Link>
-      </li> */}
+      </li>
       <li>
         <Link href="/blog/about" className="flex gap-1">
           <span

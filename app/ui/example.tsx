@@ -1,5 +1,5 @@
 import React from "react";
-// importing useEffect hook and its dependency array so that component can be used after specific actions.
+
 const ScrollToTop = () => {
   const scrollToTop = () =>
     window.scrollTo(0, 0); /* scrolling to top of page with smooth animation if
