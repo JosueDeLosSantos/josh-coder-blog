@@ -37,7 +37,7 @@ export default function MenubarOptions({ vertical }: { vertical: boolean }) {
       </li>
 
       <li>
-        <Link href="/signIn" className="flex gap-1">
+        <Link href="/login" className="flex gap-1">
           <span className="opacity-0">{"{"}</span>
           Sign In/Up
           <span className="opacity-0">{"}"}</span>

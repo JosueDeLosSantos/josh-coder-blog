@@ -1,6 +1,6 @@
 import SignupForm from "../ui/SignupForm";
 
-export default function SignUp() {
+export default function Page() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
       <div>

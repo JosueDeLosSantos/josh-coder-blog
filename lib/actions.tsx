@@ -1,11 +1,13 @@
 "use server";
 
+import { signIn } from "@/auth";
+import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
-import { SignupFormSchema, FormState } from "@/app/lib/definitions";
+import { SignupFormSchema, FormState } from "@/lib/definitions";
 import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
 
-export async function signup(state: FormState, formData: FormData) {
+export async function signup(prevState: FormState, formData: FormData) {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     name: formData.get("name"),
@@ -19,9 +21,6 @@ export async function signup(state: FormState, formData: FormData) {
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
-
-  // Call the provider or db to create a user...
-
   // Prepare data for insertion into database
   const { name, email, password } = validatedFields.data;
   // e.g. Hash the user's password before storing it
@@ -29,11 +28,12 @@ export async function signup(state: FormState, formData: FormData) {
 
   // call the db to create the user
   const client = await db.connect();
-  // creates a user's table is it does not exists
+  // creates a user's table if it does not exist
   await client.query(
     `CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) PRIMARY KEY,
+      email VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL
     )`
   );
@@ -49,7 +49,7 @@ export async function signup(state: FormState, formData: FormData) {
       [name, email, hashedPassword]
     );
   } else {
-    // modify the state to show the error
+    // show error
     return {
       errors: {
         email: ["Email already exists"],
@@ -61,5 +61,25 @@ export async function signup(state: FormState, formData: FormData) {
   client.release();
 
   // Redirect the user to the sign in page
-  redirect("/signIn");
+  redirect("/login");
+}
+
+export async function authenticate(
+  prevState: string | undefined,
+  formData: FormData
+) {
+  try {
+    console.log(formData);
+    await signIn("credentials", formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return "Invalid credentials.";
+        default:
+          return "Something went wrong.";
+      }
+    }
+    throw error;
+  }
 }
