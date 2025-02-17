@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { SignupFormSchema, FormState } from "@/lib/definitions";
@@ -31,9 +31,8 @@ export async function signup(prevState: FormState, formData: FormData) {
   // creates a user's table if it does not exist
   await client.query(
     `CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) NOT NULL,
+      email VARCHAR(255) PRIMARY KEY,
       password VARCHAR(255) NOT NULL
     )`
   );
@@ -69,7 +68,6 @@ export async function authenticate(
   formData: FormData
 ) {
   try {
-    console.log(formData);
     await signIn("credentials", formData);
   } catch (error) {
     if (error instanceof AuthError) {
@@ -82,4 +80,8 @@ export async function authenticate(
     }
     throw error;
   }
+}
+
+export async function logout() {
+  await signOut({ redirectTo: "/" });
 }

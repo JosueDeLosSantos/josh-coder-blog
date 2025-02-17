@@ -6,7 +6,7 @@ import { useSearchParams } from "next/navigation";
 
 export default function SignInForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/auth";
+  const callbackUrl = searchParams.get("callbackUrl") || "/auth/blog";
   const [state, action, pending] = useActionState(authenticate, undefined);
 
   return (
