@@ -17,6 +17,8 @@ export default function MenubarOptions({
 }) {
   const pathname = usePathname();
   const [isAuth, setIsAuth] = useState(true);
+  const blogAddress = session ? "/auth/blog" : "/blog";
+  const blogAbout = session ? "/auth/blog/about" : "/blog/about";
 
   useEffect(() => {
     if (isAuth === false) {
@@ -33,10 +35,10 @@ export default function MenubarOptions({
       )}
     >
       <li>
-        <Link href="/blog" className="flex gap-1">
+        <Link href={blogAddress} className="flex gap-1">
           <span
             className={clsx("text-secondary", {
-              "opacity-0": pathname !== "/blog",
+              "opacity-0": pathname !== blogAddress,
             })}
           >
             {"{"}
@@ -44,7 +46,7 @@ export default function MenubarOptions({
           Posts
           <span
             className={clsx("text-secondary", {
-              "opacity-0": pathname !== "/blog",
+              "opacity-0": pathname !== blogAddress,
             })}
           >
             {"}"}
@@ -53,17 +55,10 @@ export default function MenubarOptions({
       </li>
 
       <li>
-        <Link href="/login" className="flex gap-1">
-          <span className="opacity-0">{"{"}</span>
-          Sign In/Up
-          <span className="opacity-0">{"}"}</span>
-        </Link>
-      </li>
-      <li>
-        <Link href="/blog/about" className="flex gap-1">
+        <Link href={blogAbout} className="flex gap-1">
           <span
             className={clsx("text-secondary", {
-              "opacity-0": pathname !== "/blog/about",
+              "opacity-0": pathname !== blogAbout,
             })}
           >
             {"{"}
@@ -71,13 +66,22 @@ export default function MenubarOptions({
           About
           <span
             className={clsx("text-secondary", {
-              "opacity-0": pathname !== "/blog/about",
+              "opacity-0": pathname !== blogAbout,
             })}
           >
             {"}"}
           </span>
         </Link>
       </li>
+      {!session && (
+        <li>
+          <Link href="/login" className="flex gap-1">
+            <span className="opacity-0">{"{"}</span>
+            Sign In/Up
+            <span className="opacity-0">{"}"}</span>
+          </Link>
+        </li>
+      )}
       {session && (
         <li onClick={() => setIsAuth(false)}>
           <div className="flex gap-1">

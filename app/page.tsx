@@ -20,7 +20,7 @@ export default async function Hero() {
     <>
       <div className="fixed min-h-screen w-full blog-hero-bg h-screen -z-50"></div>
       {/* This is the hero section */}
-      <div className="max-md:p-4 md:p-6 2xl:p-10">
+      <div className="max-md:p-2 md:p-6 2xl:p-10">
         <header className="flex justify-center">
           <Logo motto={true} mobileHero={true} />
         </header>
@@ -28,19 +28,26 @@ export default async function Hero() {
           <div
             className={clsx(
               orbitron.className,
-              "text-center max-md:text-xl md:text-3xl 2xl:text-5xl text-primary"
+              "text-center max-md:text-2xl md:text-3xl 2xl:text-5xl text-primary"
             )}
           >
             <h1>The go-to blog for all software developers</h1>
           </div>
           {/* This button takes users to a list of all posts */}
           <Link href="/blog">
-            <Button message="Read Now" bg="secondary" />
+            <Button
+              bg="secondary"
+              disabled={false}
+              type="button"
+              layout="landing"
+            >
+              Read Now
+            </Button>
           </Link>
           <div
             className={clsx(
               oxanium.className,
-              "max-md:text-xl md:text-3xl 2xl:text-4xl text-text"
+              "max-md:text-2xl md:text-3xl 2xl:text-4xl text-text"
             )}
           >
             <h3>Featured Posts</h3>

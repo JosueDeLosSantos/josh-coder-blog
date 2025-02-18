@@ -9,7 +9,6 @@ export default function ScrollUp() {
   const isBrowser = () => typeof window !== "undefined"; //Next js recommends this approach
 
   function scrollToTop() {
-    console.log(typeof window);
     if (!isBrowser()) return;
     window.scrollTo({ top: 0, behavior: "smooth" });
   }

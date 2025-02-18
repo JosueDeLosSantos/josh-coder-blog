@@ -1,6 +1,7 @@
 import { PostType } from "@/app/types";
 import Post from "@/app/ui/Post";
 import Link from "next/link";
+import { auth } from "@/auth";
 
 export default async function PostsList({
   data,
@@ -13,6 +14,7 @@ export default async function PostsList({
 }) {
   const posts: PostType[] = data;
   let filteredPosts: PostType[] = [];
+  const session = await auth();
 
   // Searches for posts that match the tag
   if (tag.length > 0) {
@@ -34,7 +36,11 @@ export default async function PostsList({
         filteredPosts.map((post) => (
           <Link
             key={post._id}
-            href={`/blog/${encodeURIComponent(post.slug.current)}`}
+            href={
+              session
+                ? `/auth/blog/${encodeURIComponent(post.slug.current)}`
+                : `/blog/${encodeURIComponent(post.slug.current)}`
+            }
           >
             <Post post={post} />
           </Link>
@@ -43,7 +49,11 @@ export default async function PostsList({
         posts.map((post) => (
           <Link
             key={post._id}
-            href={`/blog/${encodeURIComponent(post.slug.current)}`}
+            href={
+              session
+                ? `/auth/blog/${encodeURIComponent(post.slug.current)}`
+                : `/blog/${encodeURIComponent(post.slug.current)}`
+            }
           >
             <Post post={post} />
           </Link>
