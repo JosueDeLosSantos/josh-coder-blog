@@ -42,7 +42,7 @@ export default function BlogLayout({
           className="mb-5 ml-auto mr-8 text-xl md:text-2xl 2xl:text-3xl"
         />
         {/* Sidebar options */}
-        <MenuOptions vertical={true} />
+        <MenuOptions session={null} vertical={true} />
       </div>
       <div>
         {/* navbar */}
@@ -50,7 +50,7 @@ export default function BlogLayout({
           <Logo />
           {/* Large screens menu */}
           <div className="hidden lg:block">
-            <MenuOptions vertical={false} />
+            <MenuOptions session={null} vertical={false} />
           </div>
           {/* Small screens menu */}
           <div className="lg:hidden">
