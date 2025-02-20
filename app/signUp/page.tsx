@@ -1,12 +1,15 @@
-import SignupForm from "@/app/ui/forms/SignupForm";
+import SignupForm from "../ui/forms/SignupForm";
+import { Suspense } from "react";
+import Logo from "@/app/ui/Logo";
 
 export default function Page() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <div>
-        <h1>Sign UP</h1>
+    <div className="flex flex-col items-center max-md:gap-24 md:gap-40 min-h-screen blog-hero-bg max-md:p-2 md:p-10">
+      <Logo mobileHero={true} />
+
+      <Suspense fallback={<div>Loading...</div>}>
         <SignupForm />
-      </div>
+      </Suspense>
     </div>
   );
 }

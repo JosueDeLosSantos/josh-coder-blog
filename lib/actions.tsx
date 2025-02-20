@@ -10,7 +10,8 @@ import { db } from "@vercel/postgres";
 export async function signup(prevState: FormState, formData: FormData) {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
-    name: formData.get("name"),
+    firstName: formData.get("firstName"),
+    surname: formData.get("surname"),
     email: formData.get("email"),
     password: formData.get("password"),
   });
@@ -22,7 +23,7 @@ export async function signup(prevState: FormState, formData: FormData) {
     };
   }
   // Prepare data for insertion into database
-  const { name, email, password } = validatedFields.data;
+  const { firstName, surname, email, password } = validatedFields.data;
   // e.g. Hash the user's password before storing it
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -32,6 +33,8 @@ export async function signup(prevState: FormState, formData: FormData) {
   await client.query(
     `CREATE TABLE IF NOT EXISTS users (
       name VARCHAR(255) NOT NULL,
+      firstName VARCHAR(255) NOT NULL,
+      surname VARCHAR(255) NOT NULL,
       email VARCHAR(255) PRIMARY KEY,
       password VARCHAR(255) NOT NULL
     )`
@@ -44,8 +47,8 @@ export async function signup(prevState: FormState, formData: FormData) {
   if (!user.rows.length) {
     // insert the user into the database
     await client.query(
-      `INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
-      [name, email, hashedPassword]
+      `INSERT INTO users (name, firstName, surname, email, password) VALUES ($1, $2, $3, $4, $5)`,
+      [`${firstName} ${surname}`, firstName, surname, email, hashedPassword]
     );
   } else {
     // show error
