@@ -1,4 +1,4 @@
-import { inter, poppins } from "@/app/ui/fonts";
+import { poppins } from "@/app/ui/fonts";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import Button from "@/app/ui/Button";
@@ -31,6 +31,8 @@ export default async function About() {
   //   file: undefined,
   //   trash: undefined,
   // };
+
+  console.log(bio, date);
 
   return (
     <div className="flex flex-col min-h-screen max-sm:px-2 sm:px-6 pb-8 pt-48 md:px-20 2xl:px-40">
