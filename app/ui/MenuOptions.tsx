@@ -29,7 +29,7 @@ export default function MenubarOptions({
       )}
     >
       {session && (
-        <li onClick={() => openSubMenu()}>
+        <li onClick={() => openSubMenu && openSubMenu()}>
           <div className="cursor-pointer ">
             <Image
               className="ring-1 rounded-full ring-primaryBorder"
