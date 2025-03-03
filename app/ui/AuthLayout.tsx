@@ -4,8 +4,13 @@ import MenuOptions from "@/app/ui/MenuOptions";
 import clsx from "clsx";
 import { MdMenu } from "react-icons/md";
 import { GrClose } from "react-icons/gr";
-import { useState } from "react";
+import { FaRegUser } from "react-icons/fa6";
+import { RxExit } from "react-icons/rx";
+import { useState, useEffect } from "react";
+import { logout } from "@/lib/actions";
 import { Session } from "next-auth";
+import { poppins } from "@/app/ui/fonts";
+import Link from "next/link";
 
 export default function AuthLayout({
   children,
@@ -15,6 +20,18 @@ export default function AuthLayout({
   session: Session | null;
 }) {
   const [open, setOpen] = useState(false);
+  const [isAuth, setIsAuth] = useState(true);
+  const [submenu, setSubmenu] = useState(false);
+
+  useEffect(() => {
+    if (isAuth === false) {
+      logout();
+    }
+  }, [isAuth]);
+
+  function openSubMenu() {
+    setSubmenu(!submenu);
+  }
 
   return (
     <div>
@@ -53,7 +70,11 @@ export default function AuthLayout({
           <Logo />
           {/* Large screens menu */}
           <div className="hidden lg:block">
-            <MenuOptions session={session} vertical={false} />
+            <MenuOptions
+              session={session}
+              vertical={false}
+              openSubMenu={openSubMenu}
+            />
           </div>
           {/* Small screens menu */}
           <div className="lg:hidden">
@@ -68,6 +89,39 @@ export default function AuthLayout({
             </div>
           </div>
         </nav>
+        {/* User's options */}
+        <div
+          className={clsx(
+            poppins.className,
+            "fixed transition duration-500 -top-20 right-10 flex flex-col py-4 z-40 bg-white drop-shadow w-72",
+            {
+              "transition duration-500 translate-y-40": submenu,
+            }
+          )}
+        >
+          {/* User info */}
+          <Link href="/auth/blog/profile" onClick={() => openSubMenu()}>
+            <div className="flex justify-between cursor-pointer px-4 py-2 items-center hover:bg-textLight hover:text-white text-textLight">
+              <div className="flex flex-col w-5/6">
+                <span className="truncate font-semibold">
+                  {session?.user?.name}
+                </span>
+                <div className="truncate text-sm">
+                  {session?.user?.email || "no email found"}
+                </div>
+              </div>
+              <FaRegUser className="size-8" />
+            </div>
+          </Link>
+          {/* Sign out */}
+          <div
+            onClick={() => setIsAuth(false)}
+            className="flex justify-between cursor-pointer px-4 py-2 items-center hover:bg-textLight hover:text-white text-textLight"
+          >
+            <div className="cursor-pointer">Sign Out</div>
+            <RxExit className="size-8" />
+          </div>
+        </div>
         <main>{children}</main>
       </div>
     </div>

@@ -7,7 +7,7 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const session = await auth();
-  console.log(session);
+
   return (
     <div>
       <AuthLayout session={session}>{children}</AuthLayout>

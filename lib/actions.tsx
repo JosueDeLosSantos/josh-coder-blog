@@ -36,7 +36,10 @@ export async function signup(prevState: FormState, formData: FormData) {
       firstName VARCHAR(255) NOT NULL,
       surname VARCHAR(255) NOT NULL,
       email VARCHAR(255) PRIMARY KEY,
-      password VARCHAR(255) NOT NULL
+      password VARCHAR(255) NOT NULL,
+      bio TEXT,
+      image TEXT,
+      created_at DATE NOT NULL DEFAULT CURRENT_DATE
     )`
   );
   // check if there is a user with the same email

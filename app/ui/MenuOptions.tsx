@@ -2,38 +2,46 @@
 
 import { poppins } from "@/app/ui/fonts";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Session } from "next-auth";
-import { useState, useEffect } from "react";
-import { logout } from "@/lib/actions";
 
 export default function MenubarOptions({
   vertical,
   session,
+  openSubMenu,
 }: {
   vertical: boolean;
   session: Session | null;
+  openSubMenu?: () => void;
 }) {
   const pathname = usePathname();
-  const [isAuth, setIsAuth] = useState(true);
   const blogAddress = session ? "/auth/blog" : "/blog";
   const blogAbout = session ? "/auth/blog/about" : "/blog/about";
-
-  useEffect(() => {
-    if (isAuth === false) {
-      logout();
-    }
-  }, [isAuth]);
 
   return (
     <ul
       className={clsx(
         poppins.className,
-        "flex gap-5 font-semibold text-primary tracking-wider 2xl:text-base",
+        "flex items-center gap-5 font-semibold text-primary tracking-wider 2xl:text-base",
         { "flex-col items-start": vertical }
       )}
     >
+      {session && (
+        <li onClick={() => openSubMenu()}>
+          <div className="cursor-pointer ">
+            <Image
+              className="ring-1 rounded-full ring-primaryBorder"
+              src="/profile.png"
+              width={38}
+              height={38}
+              alt="Picture of the user"
+            />
+          </div>
+        </li>
+      )}
+
       <li>
         <Link href={blogAddress} className="flex gap-1">
           <span
@@ -73,6 +81,7 @@ export default function MenubarOptions({
           </span>
         </Link>
       </li>
+
       {!session && (
         <li>
           <Link href="/login" className="flex gap-1">
@@ -82,7 +91,7 @@ export default function MenubarOptions({
           </Link>
         </li>
       )}
-      {session && (
+      {/*  {session && (
         <li onClick={() => setIsAuth(false)}>
           <div className="flex gap-1 cursor-pointer">
             <span className="opacity-0">{"{"}</span>
@@ -90,7 +99,7 @@ export default function MenubarOptions({
             <span className="opacity-0">{"}"}</span>
           </div>
         </li>
-      )}
+      )} */}
     </ul>
   );
 }

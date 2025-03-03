@@ -12,7 +12,7 @@ export default function Button({
   type: "button" | "submit";
   layout: "landing" | "form";
   children: string;
-  bg: string;
+  bg: "primary" | "secondary";
 }) {
   return (
     <button

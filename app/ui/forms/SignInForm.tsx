@@ -24,11 +24,7 @@ export default function SignInForm() {
       </div>
       <form action={action} className="flex flex-col gap-8 w-full">
         {/* Email */}
-        <Text
-          htmlFor="email"
-          placeholder="
-        johndoe@gmail.com"
-        />
+        <Text htmlFor="email" placeholder="johndoe@gmail.com" />
         {/* Password */}
         <Password state={state} />
         {/* Sign up */}
