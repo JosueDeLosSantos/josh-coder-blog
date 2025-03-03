@@ -12,6 +12,7 @@ import { canvasPreview } from "@/utils/canvasPreview";
 import { useDebounceEffect } from "@/utils/useDebounceEffect";
 import "react-image-crop/dist/ReactCrop.css";
 import { MdOutlineAutorenew } from "react-icons/md";
+import Image from "next/image";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -320,7 +321,7 @@ const ImgCrop: React.FC<ImgCropPros> = ({
                 minHeight={50}
                 circularCrop
               >
-                <img
+                <Image
                   className="rounded-lg object-cover"
                   ref={imgRef}
                   alt="Crop me"
