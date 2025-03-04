@@ -1,8 +1,9 @@
-import { poppins } from "@/app/ui/fonts";
+import { inter, poppins } from "@/app/ui/fonts";
 import { DateTime } from "luxon";
 import Image from "next/image";
 import Button from "@/app/ui/Button";
-// import FotoUploader from "@/app/ui/forms/FotoUploader";
+import Link from "next/link";
+import FotoUploader from "@/app/ui/forms/FotoUploader";
 import { auth } from "@/auth";
 // postgres
 import { db } from "@vercel/postgres";
@@ -18,25 +19,23 @@ export default async function About() {
     bio,
     image,
     created_at,
-  }: { name: string; bio: string; image: string; created_at: Date } =
-    user.rows[0];
+  }: {
+    name: string;
+    bio: string | null;
+    image: string | null;
+    created_at: Date;
+  } = user.rows[0];
   const date = DateTime.fromJSDate(created_at).toLocaleString({
     month: "long",
     day: "numeric",
     year: "numeric",
   });
 
-  // const profilePic = {
-  //   src: "/profile.png",
-  //   file: undefined,
-  //   trash: undefined,
-  // };
-
-  console.log(bio, date);
+  console.log(image, bio);
 
   return (
     <div className="flex flex-col min-h-screen max-sm:px-2 sm:px-6 pb-8 pt-48 md:px-20 2xl:px-40">
-      <div className="relative bg-white border border-primaryBorder rounded-lg text-center px-8 md:px-16 pb-8 pt-20 mx-auto max-w-3xl max-sm:w-full sm:w-[600px]">
+      <div className="relative bg-white border border-primaryBorder rounded-lg text-center px-8 md:px-16 pb-8 pt-16 mx-auto max-w-3xl max-sm:w-full sm:w-[600px]">
         <Image
           src={image || "/profile.png"}
           alt={name || "user name"}
@@ -44,20 +43,36 @@ export default async function About() {
           height="120"
           width="120"
         />
-        {/* <FotoUploader profilePic={profilePic} /> */}
-        <div>
-          <h1 className={`${poppins.className} text-2xl font-semibold  mb-8`}>
-            {name}
-          </h1>
-          {/*  {author?.about ? (
-            <div className={`${inter.className} text-text text-left`}>
-              <PortableText value={author.about} components={components} />
-            </div>
-          ) : null} */}
+        <FotoUploader />
+
+        <div className="flex flex-col gap-8 mb-8">
+          <div>
+            <h1 className={`${poppins.className} text-2xl font-semibold`}>
+              {name}
+            </h1>
+          </div>
+          {/* bio */}
+          <div>
+            <p className={`${inter.className}`}>
+              {`You have` +
+                `${image === null && " no profile image"}` +
+                `${image === null && bio === null && " and"}` +
+                `${bio === null && " no biography"}` +
+                `, edit your profile to be all set!`}
+            </p>
+          </div>
+          {/* Start date */}
+          <div>
+            <span
+              className={`${poppins.className} text-textLight`}
+            >{`Joined on ${date}`}</span>
+          </div>
         </div>
-        <Button disabled={false} layout="form" type="button" bg="secondary">
-          Edit Profile
-        </Button>
+        <Link href="/auth/blog/profile/edit">
+          <Button disabled={false} layout="form" type="button" bg="secondary">
+            Edit Profile
+          </Button>
+        </Link>
       </div>
     </div>
   );

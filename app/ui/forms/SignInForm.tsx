@@ -22,7 +22,7 @@ export default function SignInForm() {
           Sign In
         </h2>
       </div>
-      <form action={action} className="flex flex-col gap-8 w-full">
+      <form action={action} className="flex flex-col gap-4 w-full">
         {/* Email */}
         <Text htmlFor="email" placeholder="johndoe@gmail.com" />
         {/* Password */}
@@ -40,7 +40,7 @@ export default function SignInForm() {
           </Link>
         </div>
         {/* Sign in */}
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-4">
           <input type="hidden" name="redirectTo" value={callbackUrl} />
           <Button bg="secondary" disabled={pending} type="submit" layout="form">
             Sign In

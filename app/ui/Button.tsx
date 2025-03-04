@@ -28,8 +28,8 @@ export default function Button({
         },
         {
           "bg-primary": bg === "primary",
-          "bg-secondary": bg === "secondary",
-          "border border-secondaryDark": bg === "secondary",
+          "bg-secondary border border-secondaryDark hover:bg-secondaryDark":
+            bg === "secondary",
         }
       )}
     >

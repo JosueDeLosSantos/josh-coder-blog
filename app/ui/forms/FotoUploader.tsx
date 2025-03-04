@@ -13,6 +13,7 @@ import { useDebounceEffect } from "@/utils/useDebounceEffect";
 import "react-image-crop/dist/ReactCrop.css";
 import { MdOutlineAutorenew } from "react-icons/md";
 import Image from "next/image";
+import { AiOutlineEdit } from "react-icons/ai";
 
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -44,12 +45,16 @@ type profilePicType = {
 
 type AppProps = {
   message?: string;
-  profilePic: profilePicType;
+  profilePic?: profilePicType;
 };
 
 const FotoUploader: React.FC<AppProps> = ({
-  message = "Choose File",
-  profilePic,
+  message = "Upload Picture",
+  profilePic = {
+    src: "/profile.png",
+    file: undefined,
+    trash: undefined,
+  },
 }) => {
   const [imgSrc, setImgSrc] = useState("");
   const previewCanvasRef = useRef<HTMLCanvasElement>(
@@ -247,8 +252,8 @@ const BlogImgUploadBtn: React.FC<ImgUploadBtnProps> = ({
         style={{ display: `${imageContainer}` }}
         className={
           isDragging
-            ? "text-white max-2xl:font-medium 2xl:font-semibold max-md:text-sm md:text-base 2xl:text-lg max-md:px-4 max-2xl:py-2 md:px-6 2xl:px-8 2xl:py-3 rounded bg-primaryLight"
-            : "text-white max-2xl:font-medium 2xl:font-semibold max-md:text-sm md:text-base 2xl:text-lg max-md:px-4 max-2xl:py-2 md:px-6 2xl:px-8 2xl:py-3 rounded bg-primary"
+            ? "text-textMild max-md:text-sm md:text-base 2xl:text-lg mx-auto"
+            : "text-textLight max-md:text-sm md:text-base 2xl:text-lg mx-auto"
         }
         onClick={(e) => {
           e.preventDefault();
@@ -256,6 +261,10 @@ const BlogImgUploadBtn: React.FC<ImgUploadBtnProps> = ({
         }}
         {...dragProps}
       >
+        {/* <div className="flex items-center">
+          <AiOutlineEdit className="text-lg" />
+          {message}
+        </div> */}
         {message}
       </button>
     </div>
