@@ -4,7 +4,7 @@ import { signup } from "@/lib/actions";
 import { useActionState } from "react";
 import { orbitron } from "@/app/ui/fonts";
 import Button from "@/app/ui/Button";
-import { Password, Text, ProfileImage } from "@/app/ui/forms/Fields";
+import { Password, Text } from "@/app/ui/forms/Fields";
 
 export default function SignUpForm() {
   const [state, action, pending] = useActionState(signup, undefined);
