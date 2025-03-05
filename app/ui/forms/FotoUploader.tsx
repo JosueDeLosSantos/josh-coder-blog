@@ -12,7 +12,6 @@ import { canvasPreview } from "@/utils/canvasPreview";
 import { useDebounceEffect } from "@/utils/useDebounceEffect";
 import "react-image-crop/dist/ReactCrop.css";
 import { MdOutlineAutorenew } from "react-icons/md";
-import Image from "next/image";
 import { AiOutlineEdit } from "react-icons/ai";
 
 // This is to demonstate how to make and center a % aspect crop
@@ -261,11 +260,11 @@ const BlogImgUploadBtn: React.FC<ImgUploadBtnProps> = ({
         }}
         {...dragProps}
       >
-        {/* <div className="flex items-center">
+        <div className="flex items-center">
           <AiOutlineEdit className="text-lg" />
           {message}
-        </div> */}
-        {message}
+        </div>
+        {/* {message} */}
       </button>
     </div>
   );
@@ -330,7 +329,7 @@ const ImgCrop: React.FC<ImgCropPros> = ({
                 minHeight={50}
                 circularCrop
               >
-                <Image
+                <img
                   className="rounded-lg object-cover"
                   ref={imgRef}
                   alt="Crop me"
