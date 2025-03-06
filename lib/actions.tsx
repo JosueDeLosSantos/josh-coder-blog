@@ -1,11 +1,17 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { signIn, signOut, auth } from "@/auth";
+import { v4 as uuidv4 } from "uuid";
 import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { SignupFormSchema, FormState } from "@/lib/definitions";
 import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
+import { createClient } from "@supabase/supabase-js";
+const supabase = createClient(
+  process.env.SUPABASE_PROJECT_URL as string,
+  process.env.SUPABASE_ANON_KEY as string
+);
 
 export async function signup(prevState: FormState, formData: FormData) {
   // Validate form fields
@@ -32,10 +38,11 @@ export async function signup(prevState: FormState, formData: FormData) {
   // creates a user's table if it does not exist
   await client.query(
     `CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       firstName VARCHAR(255) NOT NULL,
       surname VARCHAR(255) NOT NULL,
-      email VARCHAR(255) PRIMARY KEY,
+      email VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL,
       bio TEXT,
       image TEXT,
@@ -91,3 +98,28 @@ export async function authenticate(
 export async function logout() {
   await signOut({ redirectTo: "/blog" });
 }
+
+export async function fetchUser(email: string) {}
+
+// Upload file using standard upload
+export async function uploadFile(file: File) {
+  const filePath = `joshcoderblog/${file.name}${uuidv4()}`;
+  // upload the file
+  let { data, error } = await supabase.storage
+    .from("avatars")
+    .upload(filePath, file);
+
+  if (error) {
+    console.log(error);
+  } else {
+    // check if there is a file path in the database
+    // if there is, delete the file from supabase
+    // save the new file path to the database
+    return data;
+  }
+}
+
+// export async function deleteFile(path: string) {
+//   const { data } = await supabase.storage.from("avatars").remove([path]);
+//   return data;
+// }

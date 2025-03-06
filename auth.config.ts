@@ -17,10 +17,7 @@ export const authConfig = {
       return true;
     },
 
-    session({ session, user }) {
-      if (user) {
-        session.user.name = user.name || "Guest"; // Ensure user name exists
-      }
+    session({ session }) {
       return session;
     },
   },
