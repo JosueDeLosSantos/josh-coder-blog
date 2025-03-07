@@ -99,11 +99,11 @@ export async function logout() {
   await signOut({ redirectTo: "/blog" });
 }
 
-export async function fetchUser(email: string) {}
-
 // Upload file using standard upload
 export async function uploadFile(file: File) {
-  const filePath = `joshcoderblog/${file.name}${uuidv4()}`;
+  const session = await auth();
+  const pgClient = await db.connect();
+  const filePath = `joshcoderblog/${uuidv4()}${file.name}`;
   // upload the file
   let { data, error } = await supabase.storage
     .from("avatars")
@@ -113,10 +113,32 @@ export async function uploadFile(file: File) {
     console.log(error);
   } else {
     // check if there is a file path in the database
-    // if there is, delete the file from supabase
+    const user = await pgClient.query(`SELECT * FROM users WHERE email = $1`, [
+      session?.user?.email,
+    ]);
+
+    if (user.rows[0].image) {
+      // delete the file from supabase
+      await supabase.storage.from("avatars").remove([user.rows[0].image]);
+    }
     // save the new file path to the database
+    await pgClient.query(`UPDATE users SET image = $1 WHERE email = $2`, [
+      filePath,
+      session?.user?.email,
+    ]);
+
+    pgClient.release();
+
     return data;
   }
+}
+
+export async function getUrl(path: string | null) {
+  if (path !== null) {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+    return data.publicUrl;
+  }
+  return null;
 }
 
 // export async function deleteFile(path: string) {

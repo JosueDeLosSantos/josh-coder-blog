@@ -1,11 +1,14 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { poppins } from "@/app/ui/fonts";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import { Session } from "next-auth";
+// supabase
+import { getUrl } from "@/lib/actions";
 
 export default function MenubarOptions({
   vertical,
@@ -19,6 +22,16 @@ export default function MenubarOptions({
   const pathname = usePathname();
   const blogAddress = session ? "/auth/blog" : "/blog";
   const blogAbout = session ? "/auth/blog/about" : "/blog/about";
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  useEffect(() => {
+    async function fetchImageUrl() {
+      if (session) {
+        const imageUrl = await getUrl(session.user?.image ?? null);
+        setImageUrl(imageUrl);
+      }
+    }
+    fetchImageUrl();
+  }, [imageUrl, session]);
 
   return (
     <ul
@@ -32,8 +45,8 @@ export default function MenubarOptions({
         <li onClick={() => openSubMenu && openSubMenu()}>
           <div className="cursor-pointer ">
             <Image
-              className="ring-1 rounded-full ring-primaryBorder"
-              src="/profile.png"
+              className="ring-1 rounded-full ring-primaryBorder bg-white"
+              src={imageUrl || "/profile.png"}
               width={38}
               height={38}
               alt="Picture of the user"
