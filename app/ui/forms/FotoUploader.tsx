@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, use } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { uploadFile } from "@/lib/actions";
 import ImageUploading, { ImageListType } from "react-images-uploading";
 import ReactCrop, {

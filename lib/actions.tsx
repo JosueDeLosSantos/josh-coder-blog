@@ -105,7 +105,7 @@ export async function uploadFile(file: File) {
   const pgClient = await db.connect();
   const filePath = `joshcoderblog/${uuidv4()}${file.name}`;
   // upload the file
-  let { data, error } = await supabase.storage
+  const { data, error } = await supabase.storage
     .from("avatars")
     .upload(filePath, file);
 

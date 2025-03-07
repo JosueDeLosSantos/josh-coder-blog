@@ -104,15 +104,6 @@ export default function MenubarOptions({
           </Link>
         </li>
       )}
-      {/*  {session && (
-        <li onClick={() => setIsAuth(false)}>
-          <div className="flex gap-1 cursor-pointer">
-            <span className="opacity-0">{"{"}</span>
-            Log out
-            <span className="opacity-0">{"}"}</span>
-          </div>
-        </li>
-      )} */}
     </ul>
   );
 }
