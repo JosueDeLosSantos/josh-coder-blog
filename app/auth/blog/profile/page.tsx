@@ -1,7 +1,7 @@
 import { inter, poppins } from "@/app/ui/fonts";
 import { DateTime } from "luxon";
-import Image from "next/image";
 import Button from "@/app/ui/Button";
+import ProfileImage from "@/app/ui/ProfileImage";
 import Link from "next/link";
 import FotoUploader from "@/app/ui/forms/FotoUploader";
 import { auth } from "@/auth";
@@ -20,12 +20,10 @@ export default async function About() {
   const {
     name,
     bio,
-    image,
     created_at,
   }: {
     name: string;
     bio: string | null;
-    image: string | null;
     created_at: Date;
   } = user.rows[0];
   const date = DateTime.fromJSDate(created_at).toLocaleString({
@@ -34,17 +32,17 @@ export default async function About() {
     year: "numeric",
   });
 
-  const imageUrl = await getUrl(image);
+  const imageUrl = await getUrl(session);
 
   return (
     <div className="flex flex-col min-h-screen max-sm:px-2 sm:px-6 pb-8 pt-48 md:px-20 2xl:px-40">
       <div className="relative bg-white border border-primaryBorder rounded-lg text-center px-8 md:px-16 pb-8 pt-16 mx-auto max-w-3xl max-sm:w-full sm:w-[600px]">
-        <Image
-          src={imageUrl || "/profile.png"}
+        <ProfileImage
+          image={imageUrl}
           alt={name || "user name"}
           className="absolute bg-white -top-16 left-1/2 transform -translate-x-1/2 rounded-full ring-1 ring-primaryBorder"
-          height="120"
-          width="120"
+          height={120}
+          width={120}
         />
         <FotoUploader message="Edit profile image" />
 
@@ -57,11 +55,10 @@ export default async function About() {
           {/* bio */}
           <div>
             <p className={`${inter.className}`}>
-              {`You have` +
-                `${image === null && " no profile image"}` +
-                `${image === null && bio === null && " and"}` +
-                `${bio === null && " no biography"}` +
-                `, edit your profile to be all set!`}
+              {`${
+                bio === null &&
+                "You have no biography, edit your profile to be all set!"
+              }`}
             </p>
           </div>
           {/* Start date */}

@@ -13,7 +13,7 @@ import { canvasPreview } from "@/utils/canvasPreview";
 import { useDebounceEffect } from "@/utils/useDebounceEffect";
 import "react-image-crop/dist/ReactCrop.css";
 import { AiOutlineEdit } from "react-icons/ai";
-
+import { MdAutorenew } from "react-icons/md";
 // This is to demonstate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
 function centerAspectCrop(
@@ -48,13 +48,14 @@ export default function FotoUploader({ message }: { message: string }) {
   const [images, setImages] = useState<ImageListType>([]);
   const [cropSectionVisibility, setCropSectionVisibility] = useState("none");
   const [profileImage, setProfileImage] = useState(null as unknown as File);
+  const [loading, setLoading] = useState(false);
   const aspect = 1 / 1;
 
   useEffect(() => {
     async function uploadProfileImage() {
       if (profileImage) {
         const response = await uploadFile(profileImage);
-        console.log(response);
+        if (response) window.location.reload();
       }
     }
     uploadProfileImage();
@@ -159,6 +160,7 @@ export default function FotoUploader({ message }: { message: string }) {
           <div>
             <BlogImgUploadBtn
               isDragging={isDragging}
+              loading={loading}
               message={message}
               dragProps={{ ...dragProps }}
               onImageUpload={onImageUpload}
@@ -171,6 +173,7 @@ export default function FotoUploader({ message }: { message: string }) {
               previewCanvasRef={previewCanvasRef}
               completedCrop={completedCrop}
               crop={crop}
+              setLoading={setLoading}
               onRemoveCrop={onRemoveCrop}
               setCrop={setCrop}
               setCompletedCrop={setCompletedCrop}
@@ -186,6 +189,7 @@ export default function FotoUploader({ message }: { message: string }) {
 
 interface ImgUploadBtnProps {
   isDragging: boolean;
+  loading: boolean;
   message: string;
   dragProps: {
     onDrop: (e: React.DragEvent<HTMLElement>) => void;
@@ -199,6 +203,7 @@ interface ImgUploadBtnProps {
 
 const BlogImgUploadBtn: React.FC<ImgUploadBtnProps> = ({
   isDragging,
+  loading,
   message,
   dragProps,
   onImageUpload,
@@ -218,8 +223,10 @@ const BlogImgUploadBtn: React.FC<ImgUploadBtnProps> = ({
         {...dragProps}
       >
         <div className="flex items-center">
-          <AiOutlineEdit className="text-lg" />
-          {message}
+          {!loading && <AiOutlineEdit className="text-lg" />}
+          {loading && <MdAutorenew className="text-lg animate-spin" />}
+          {loading && "Uploading..."}
+          {!loading && message}
         </div>
       </button>
     </div>
@@ -234,6 +241,7 @@ interface ImgCropPros {
   previewCanvasRef: React.RefObject<HTMLCanvasElement>;
   completedCrop: PixelCrop | undefined;
   crop: Crop | undefined;
+  setLoading: (param: boolean) => void;
   onRemoveCrop: () => void;
   setCrop: React.Dispatch<React.SetStateAction<Crop | undefined>>;
   setCompletedCrop: React.Dispatch<React.SetStateAction<PixelCrop | undefined>>;
@@ -250,6 +258,7 @@ const ImgCrop: React.FC<ImgCropPros> = ({
   completedCrop,
   crop,
 
+  setLoading,
   onRemoveCrop,
   setCrop,
   setCompletedCrop,
@@ -315,6 +324,7 @@ const ImgCrop: React.FC<ImgCropPros> = ({
                   onClick={(e) => {
                     e.preventDefault();
                     onCropSelected();
+                    setLoading(true);
                   }}
                 >
                   Crop
@@ -324,6 +334,7 @@ const ImgCrop: React.FC<ImgCropPros> = ({
                   onClick={(e) => {
                     e.preventDefault();
                     onRemoveCrop();
+                    setLoading(false);
                   }}
                 >
                   Cancel

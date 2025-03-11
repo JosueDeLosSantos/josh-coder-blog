@@ -2,7 +2,7 @@
 
 import { signIn, signOut, auth } from "@/auth";
 import { v4 as uuidv4 } from "uuid";
-import { AuthError } from "next-auth";
+import { AuthError, Session } from "next-auth";
 import { redirect } from "next/navigation";
 import { SignupFormSchema, FormState } from "@/lib/definitions";
 import bcrypt from "bcryptjs";
@@ -133,12 +133,25 @@ export async function uploadFile(file: File) {
   }
 }
 
-export async function getUrl(path: string | null) {
-  if (path !== null) {
-    const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-    return data.publicUrl;
+export async function getUrl(session: Session | null) {
+  const pgClient = await db.connect();
+  if (session) {
+    const user = await pgClient.query(`SELECT * FROM users WHERE email = $1`, [
+      session?.user?.email,
+    ]);
+    const { data } = supabase.storage
+      .from("avatars")
+      .getPublicUrl(user.rows[0].image);
+    pgClient.release();
+    return { src: data.publicUrl, date: Date.now() };
+  } else {
+    return null;
   }
-  return null;
+}
+
+export async function getTempUrl(path: string) {
+  const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+  return { src: data.publicUrl, date: Date.now() };
 }
 
 // export async function deleteFile(path: string) {

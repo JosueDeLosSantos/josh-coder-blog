@@ -8,9 +8,5 @@ export default async function Layout({
 }) {
   const session = await auth();
 
-  return (
-    <div>
-      <AuthLayout session={session}>{children}</AuthLayout>
-    </div>
-  );
+  return <AuthLayout session={session}>{children}</AuthLayout>;
 }
