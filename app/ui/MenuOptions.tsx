@@ -23,14 +23,12 @@ export default function MenubarOptions({
   const blogAddress = session ? "/auth/blog" : "/blog";
   const blogAbout = session ? "/auth/blog/about" : "/blog/about";
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  if (session) {
-    useEffect(() => {
-      (async () => {
-        const image = await getUrl(session);
-        setImageUrl(image);
-      })();
-    }, [session]);
-  }
+  useEffect(() => {
+    (async () => {
+      const image = await getUrl(session);
+      setImageUrl(image);
+    })();
+  }, [session]);
 
   return (
     <ul
