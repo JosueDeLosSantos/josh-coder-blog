@@ -143,7 +143,7 @@ export async function getUrl(session: Session | null) {
       .from("avatars")
       .getPublicUrl(user.rows[0].image);
     pgClient.release();
-    return { src: data.publicUrl, date: Date.now() };
+    return data.publicUrl;
   } else {
     return null;
   }

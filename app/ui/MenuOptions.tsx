@@ -22,10 +22,7 @@ export default function MenubarOptions({
   const pathname = usePathname();
   const blogAddress = session ? "/auth/blog" : "/blog";
   const blogAbout = session ? "/auth/blog/about" : "/blog/about";
-  const [imageUrl, setImageUrl] = useState<{
-    src: string;
-    date: number;
-  } | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
   if (session) {
     useEffect(() => {
       (async () => {
@@ -48,7 +45,7 @@ export default function MenubarOptions({
           <div className="cursor-pointer ">
             <ProfileImage
               className="ring-1 rounded-full ring-primaryBorder bg-white"
-              image={imageUrl}
+              src={imageUrl}
               width={38}
               height={38}
               alt="Picture of the user"

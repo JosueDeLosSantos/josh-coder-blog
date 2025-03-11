@@ -38,7 +38,7 @@ export default async function About() {
     <div className="flex flex-col min-h-screen max-sm:px-2 sm:px-6 pb-8 pt-48 md:px-20 2xl:px-40">
       <div className="relative bg-white border border-primaryBorder rounded-lg text-center px-8 md:px-16 pb-8 pt-16 mx-auto max-w-3xl max-sm:w-full sm:w-[600px]">
         <ProfileImage
-          image={imageUrl}
+          src={imageUrl}
           alt={name || "user name"}
           className="absolute bg-white -top-16 left-1/2 transform -translate-x-1/2 rounded-full ring-1 ring-primaryBorder"
           height={120}

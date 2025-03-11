@@ -3,13 +3,13 @@
 import Image from "next/image";
 
 export default function ProfileImage({
-  image,
+  src,
   alt,
   className,
   height,
   width,
 }: {
-  image: { src: string; date: number } | null;
+  src: string | null;
   alt: string;
   className: string;
   height: number;
@@ -17,7 +17,7 @@ export default function ProfileImage({
 }) {
   return (
     <Image
-      src={image?.src || "/profile.png"}
+      src={src || "/profile.png"}
       alt={alt}
       className={className}
       height={height}
