@@ -165,6 +165,31 @@ export async function getUserData() {
   return user.rows[0];
 }
 
+// Upload file automatically
+export async function uploadFileAuto() {
+  const imagePath = "http://localhost:3000/profile.png"; // Path relative to /public
+  const response = await fetch(imagePath);
+  const blob = await response.blob(); // Convert to Blob
+  const file = new File([blob], "profile.png", { type: blob.type });
+  const filePath = "joshcoderblog/profile.png";
+  const { data, error } = await supabase.storage
+    .from("avatars")
+    .upload(filePath, file);
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("File uploaded successfully", data);
+  }
+}
+
+// Delete file automatically
+export async function deleteFileAuto() {
+  const { data } = await supabase.storage
+    .from("avatars")
+    .remove(["joshcoderblog/profile.png"]);
+  console.log("File deleted successfully", data);
+}
+
 // export async function deleteFile(path: string) {
 //   const { data } = await supabase.storage.from("avatars").remove([path]);
 //   return data;

@@ -1,6 +1,7 @@
 import "@/app/ui/globals.css";
 import { Metadata } from "next";
 import { SanityLive } from "@/sanity/live";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Josh Coder Blog",
@@ -17,6 +18,7 @@ export default function RootLayout({
       <body className="min-h-screen">
         {children}
         <SanityLive />
+        <SpeedInsights />
       </body>
     </html>
   );
