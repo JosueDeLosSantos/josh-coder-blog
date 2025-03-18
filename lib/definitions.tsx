@@ -1,12 +1,15 @@
 import { z } from "zod";
 
 export type User = {
-  firstName: string;
+  id: number;
+  firstname: string;
   surname: string;
   name: string;
   email: string;
   password: string;
+  bio?: string;
   image?: string | null;
+  created_at: Date;
 };
 
 export const SignupFormSchema = z.object({

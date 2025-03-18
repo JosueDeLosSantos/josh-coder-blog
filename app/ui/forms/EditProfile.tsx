@@ -5,9 +5,11 @@ import { useActionState } from "react";
 import { orbitron } from "@/app/ui/fonts";
 import Button from "@/app/ui/Button";
 import { Password, Text } from "@/app/ui/forms/Fields";
+import type { User } from "@/lib/definitions";
 
-export default function SignUpForm() {
+export default function EditForm({ user }: { user: User }) {
   const [state, action, pending] = useActionState(signup, undefined);
+  const { firstname, surname, email } = user;
 
   return (
     <div className="flex flex-col max-w-96 w-full items-center justify-center max-md:p-2 md:p-10 bg-white border border-primaryBorder rounded-lg md:min-w-[600px]">
@@ -20,15 +22,30 @@ export default function SignUpForm() {
       </div>
       <form action={action} className="flex flex-col gap-4 w-full">
         {/* Name */}
-        <Text state={state} htmlFor="firstName" placeholder="John" />
+        <Text
+          state={state}
+          htmlFor="firstName"
+          placeholder="John"
+          value={firstname}
+        />
         {/* Surname */}
-        <Text state={state} htmlFor="surname" placeholder="Doe" />
+        <Text
+          state={state}
+          htmlFor="surname"
+          placeholder="Doe"
+          value={surname}
+        />
 
         {/* Email */}
-        <Text state={state} htmlFor="email" placeholder="johndoe@gmail.com" />
+        <Text
+          state={state}
+          htmlFor="email"
+          placeholder="johndoe@gmail.com"
+          value={email}
+        />
 
         {/* Password */}
-        <Password state={state} />
+        <Password state={state} title="New Password" />
 
         {/* Sign Up */}
         <div className="flex justify-center mt-10">

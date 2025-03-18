@@ -5,13 +5,21 @@ import { poppins, ubuntu } from "@/app/ui/fonts";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 
-export function Password({ state }: { state: string | FormState | undefined }) {
+export function Password({
+  state,
+  value,
+  title,
+}: {
+  state: string | FormState | undefined;
+  value?: string;
+  title?: string;
+}) {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div>
       <div className="flex flex-col gap-2">
         <label className={`${poppins.className} text-text`} htmlFor="password">
-          Password
+          {title || "Password"}
         </label>
         <div className="relative">
           <input
@@ -20,6 +28,7 @@ export function Password({ state }: { state: string | FormState | undefined }) {
             name="password"
             type={showPassword ? "text" : "password"}
             placeholder="********"
+            defaultValue={value}
           />
           {showPassword ? (
             <FaEye
@@ -67,10 +76,12 @@ export function Text({
   state,
   htmlFor,
   placeholder,
+  value,
 }: {
   state?: FormState;
   htmlFor: string;
   placeholder: string;
+  value?: string;
 }) {
   return (
     <div>
@@ -84,6 +95,7 @@ export function Text({
             id={htmlFor}
             name={htmlFor}
             placeholder={placeholder}
+            defaultValue={value}
           />
           <div
             className="flex h-4 items-end space-x-1"
@@ -108,6 +120,7 @@ export function Text({
             id={htmlFor}
             name={htmlFor}
             placeholder={placeholder}
+            defaultValue={value}
           />
           <div
             className="flex h-4 items-end space-x-1"
@@ -132,6 +145,7 @@ export function Text({
             id={htmlFor}
             name={htmlFor}
             placeholder={placeholder}
+            defaultValue={value}
           />
           <div
             className="flex h-4 items-end space-x-1"

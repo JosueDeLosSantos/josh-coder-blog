@@ -40,7 +40,7 @@ export async function signup(prevState: FormState, formData: FormData) {
     `CREATE TABLE IF NOT EXISTS users (
       id SERIAL PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      firstName VARCHAR(255) NOT NULL,
+      firstname VARCHAR(255) NOT NULL,
       surname VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL,
@@ -152,6 +152,17 @@ export async function getUrl(session: Session | null) {
 export async function getTempUrl(path: string) {
   const { data } = supabase.storage.from("avatars").getPublicUrl(path);
   return { src: data.publicUrl, date: Date.now() };
+}
+
+export async function getUserData() {
+  const session = await auth();
+  const pgClient = await db.connect();
+  const user = await pgClient.query(`SELECT * FROM users WHERE email = $1`, [
+    session?.user?.email,
+  ]);
+  pgClient.release();
+  // return the user object
+  return user.rows[0];
 }
 
 // export async function deleteFile(path: string) {
