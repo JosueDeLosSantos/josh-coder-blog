@@ -167,7 +167,7 @@ export async function getUserData() {
 
 // Upload file automatically
 export async function uploadFileAuto() {
-  const imagePath = "https://josh-coder-blog.vercel.app/profile.png"; // Path relative to /public
+  const imagePath = "/profile.png"; // Path relative to /public
   const response = await fetch(imagePath);
   const blob = await response.blob(); // Convert to Blob
   const file = new File([blob], "profile.png", { type: blob.type });
