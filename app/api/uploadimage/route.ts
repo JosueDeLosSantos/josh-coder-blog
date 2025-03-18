@@ -1,6 +1,6 @@
 import { uploadFileAuto } from "@/lib/actions";
 
-export async function GET(request: Request) {
+export async function GET() {
   await uploadFileAuto();
   return new Response("File uploaded successfully");
 }
