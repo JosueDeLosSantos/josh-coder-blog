@@ -167,18 +167,20 @@ export async function getUserData() {
 
 // Upload file automatically
 export async function uploadFileAuto() {
-  const imagePath = "/profile.png"; // Path relative to /public
+  const imagePath = "https://josh-coder-blog.vercel.app/profile.png"; // Path relative to /public
   const response = await fetch(imagePath);
-  const blob = await response.blob(); // Convert to Blob
-  const file = new File([blob], "profile.png", { type: blob.type });
-  const filePath = "joshcoderblog/profile.png";
-  const { data, error } = await supabase.storage
-    .from("avatars")
-    .upload(filePath, file);
-  if (error) {
-    console.log(error);
-  } else {
-    console.log("File uploaded successfully", data);
+  if (response.ok) {
+    const blob = await response.blob(); // Convert to Blob
+    const file = new File([blob], "profile.png", { type: blob.type });
+    const filePath = "joshcoderblog/profile.png";
+    const { data, error } = await supabase.storage
+      .from("avatars")
+      .upload(filePath, file);
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("File uploaded successfully", data);
+    }
   }
 }
 
