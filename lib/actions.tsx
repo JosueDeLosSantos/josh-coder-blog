@@ -9,8 +9,6 @@ import {
   UpdateProfileSchema,
   UpdatePasswordSchema,
   FormState,
-  ProfileFormState,
-  PasswordFormState,
 } from "@/lib/definitions";
 import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
@@ -83,10 +81,7 @@ export async function signup(prevState: FormState, formData: FormData) {
   redirect("/login");
 }
 
-export async function updatePassword(
-  prevState: PasswordFormState,
-  formData: FormData
-) {
+export async function updatePassword(prevState: FormState, formData: FormData) {
   // Validate form fields
   const validatedFields = UpdatePasswordSchema.safeParse({
     password: formData.get("password"),
@@ -129,10 +124,7 @@ export async function updatePassword(
   redirect("/login");
 }
 
-export async function updateProfile(
-  prevState: ProfileFormState,
-  formData: FormData
-) {
+export async function updateProfile(prevState: FormState, formData: FormData) {
   // Validate form fields
   const validatedFields = UpdateProfileSchema.safeParse({
     firstName: formData.get("firstName"),

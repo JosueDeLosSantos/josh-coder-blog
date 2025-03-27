@@ -70,26 +70,8 @@ export type FormState =
         surname?: string[];
         email?: string[];
         password?: string[];
-      };
-      message?: string;
-    }
-  | undefined;
-
-export type ProfileFormState =
-  | {
-      errors?: {
-        firstName?: string[];
-        surname?: string[];
-        email?: string[];
-      };
-    }
-  | undefined;
-
-export type PasswordFormState =
-  | {
-      errors?: {
-        password?: string[];
         new_password?: string[];
       };
+      message?: string;
     }
   | undefined;
