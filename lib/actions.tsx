@@ -4,7 +4,14 @@ import { signIn, signOut, auth } from "@/auth";
 import { v4 as uuidv4 } from "uuid";
 import { AuthError, Session } from "next-auth";
 import { redirect } from "next/navigation";
-import { SignupFormSchema, FormState } from "@/lib/definitions";
+import {
+  SignupFormSchema,
+  UpdateProfileSchema,
+  UpdatePasswordSchema,
+  FormState,
+  ProfileFormState,
+  PasswordFormState,
+} from "@/lib/definitions";
 import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
 import { createClient } from "@supabase/supabase-js";
@@ -76,6 +83,123 @@ export async function signup(prevState: FormState, formData: FormData) {
   redirect("/login");
 }
 
+export async function updatePassword(
+  prevState: PasswordFormState,
+  formData: FormData
+) {
+  // Validate form fields
+  const validatedFields = UpdatePasswordSchema.safeParse({
+    password: formData.get("password"),
+    new_password: formData.get("new_password"),
+  });
+
+  if (!validatedFields.success) {
+    const customErrors = validatedFields.error.flatten().fieldErrors;
+    if (customErrors.password) {
+      customErrors.password = ["this is not your current password"];
+    }
+    return {
+      errors: customErrors,
+    };
+  }
+
+  const { password, new_password } = validatedFields.data;
+  // e.g. check the user's password before updating it
+  const client = await db.connect();
+  const session = await auth();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    session?.user?.email,
+  ]);
+  const isMatch = await bcrypt.compare(password, user.rows[0].password);
+  if (isMatch) {
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+    // update the user's password in the database
+    await client.query(`UPDATE users SET password = $1 WHERE email = $2`, [
+      hashedPassword,
+      session?.user?.email,
+    ]);
+  } else {
+    return { errors: { password: ["this is not your current password"] } };
+  }
+  // close the connection
+  client.release();
+
+  await signOut();
+  // Redirect the user to the sign in page
+  redirect("/login");
+}
+
+export async function updateProfile(
+  prevState: ProfileFormState,
+  formData: FormData
+) {
+  // Validate form fields
+  const validatedFields = UpdateProfileSchema.safeParse({
+    firstName: formData.get("firstName"),
+    surname: formData.get("surname"),
+    email: formData.get("email"),
+  });
+
+  // If any form fields are invalid, return early
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+    };
+  }
+  // Prepare data for insertion into database
+  const { firstName, surname, email } = validatedFields.data;
+
+  const client = await db.connect();
+  // check in the db if there is a user with the same email
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  // check if email is different from the session email
+  const session = await auth();
+  const isSessionEmail = session?.user?.email === email;
+
+  // if the email is different from the session email and is not found in the db
+  if (!isSessionEmail && !user.rows.length) {
+    // update the user's profile in the database
+    await client.query(
+      `UPDATE users SET name = $1, firstname = $2, surname = $3, email = $4 WHERE email = $5`,
+      [
+        `${firstName} ${surname}`,
+        firstName,
+        surname,
+        email,
+        session?.user?.email,
+      ]
+    );
+    client.release();
+
+    await signOut();
+    // Redirect the user to the sign in page
+    redirect("/login");
+    // if the email is different from the session email and is found in the db
+  } else if (!isSessionEmail && user.rows.length) {
+    // show error
+    client.release();
+    return {
+      errors: {
+        email: [`${email} belongs to another user`],
+      },
+    };
+    // if the email is the same as the session email
+  } else {
+    // update the user's profile in the database
+    await client.query(
+      `UPDATE users SET name = $1, firstname = $2, surname = $3 WHERE email = $4`,
+      [`${firstName} ${surname}`, firstName, surname, email]
+    );
+    client.release();
+
+    await signOut();
+    // Redirect the user to the sign in page
+    redirect("/login");
+  }
+}
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
@@ -139,13 +263,22 @@ export async function getUrl(session: Session | null) {
     const user = await pgClient.query(`SELECT * FROM users WHERE email = $1`, [
       session?.user?.email,
     ]);
-    const { data } = supabase.storage
-      .from("avatars")
-      .getPublicUrl(user.rows[0].image);
-    pgClient.release();
-    return data.publicUrl;
+    // check if there is a file path in the database
+    if (user.rows[0].image) {
+      const { data } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(user.rows[0].image);
+
+      pgClient.release();
+      return data.publicUrl;
+    } else {
+      // if there is no file path, return the default image
+      pgClient.release();
+      return "/profile.png";
+    }
   } else {
-    return null;
+    pgClient.release();
+    return "/profile.png";
   }
 }
 

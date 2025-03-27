@@ -25,7 +25,9 @@ export default function AuthLayout({
 
   useEffect(() => {
     if (isAuth === false) {
-      logout();
+      (async function logoutUser(): Promise<void> {
+        await logout();
+      })();
     }
   }, [isAuth]);
 

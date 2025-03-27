@@ -22,7 +22,7 @@ export default function MenubarOptions({
   const pathname = usePathname();
   const blogAddress = session ? "/auth/blog" : "/blog";
   const blogAbout = session ? "/auth/blog/about" : "/blog/about";
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>("/profile.png");
   useEffect(() => {
     (async () => {
       const image = await getUrl(session);

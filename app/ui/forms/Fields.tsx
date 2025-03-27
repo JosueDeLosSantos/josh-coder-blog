@@ -24,8 +24,8 @@ export function Password({
         <div className="relative">
           <input
             className="p-2 w-full bg-blogBg rounded-md focus:outline focus:outline-primaryLight text-textLight"
-            id="password"
-            name="password"
+            id={title ? "new_password" : "password"}
+            name={title ? "new_password" : "password"}
             type={showPassword ? "text" : "password"}
             placeholder="********"
             defaultValue={value}
@@ -54,7 +54,7 @@ export function Password({
               </p>
             </>
           )}
-          {typeof state === "object" && state?.errors?.password && (
+          {typeof state === "object" && state?.errors?.password && !title && (
             <>
               {state.errors.password.map((error: string) => (
                 <p
@@ -66,6 +66,20 @@ export function Password({
               ))}
             </>
           )}
+          {typeof state === "object" &&
+            state?.errors?.new_password &&
+            title && (
+              <>
+                {state.errors.new_password.map((error: string) => (
+                  <p
+                    key={error}
+                    className={`${ubuntu.className} text-sm text-red-500`}
+                  >
+                    {error}
+                  </p>
+                ))}
+              </>
+            )}
         </div>
       </div>
     </div>

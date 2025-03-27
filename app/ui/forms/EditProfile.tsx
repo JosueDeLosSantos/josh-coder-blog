@@ -1,14 +1,15 @@
 "use client";
 
-import { signup } from "@/lib/actions";
+import { updateProfile } from "@/lib/actions";
 import { useActionState } from "react";
-import { orbitron } from "@/app/ui/fonts";
+import { orbitron, poppins } from "@/app/ui/fonts";
 import Button from "@/app/ui/Button";
-import { Password, Text } from "@/app/ui/forms/Fields";
+import { Text } from "@/app/ui/forms/Fields";
 import type { User } from "@/lib/definitions";
+import Link from "next/link";
 
 export default function EditForm({ user }: { user: User }) {
-  const [state, action, pending] = useActionState(signup, undefined);
+  const [state, action, pending] = useActionState(updateProfile, undefined);
   const { firstname, surname, email } = user;
 
   return (
@@ -44,8 +45,13 @@ export default function EditForm({ user }: { user: User }) {
           value={email}
         />
 
-        {/* Password */}
-        <Password state={state} title="New Password" />
+        {/* Do you want to update your password? */}
+        <Link
+          href={"/auth/blog/profile/password"}
+          className={`${poppins.className} text-secondary mb-2 cursor-pointer hover:underline`}
+        >
+          Click here to update your password
+        </Link>
 
         {/* Sign Up */}
         <div className="flex justify-center mt-10">
