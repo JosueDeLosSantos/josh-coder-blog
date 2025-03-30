@@ -54,7 +54,6 @@ export default async function About() {
             </h1>
           </div>
           {/* bio */}
-
           <div className={`${inter.className}`}>
             {bio === null || bio === "" ? (
               <p>You have no biography, edit your profile to be all set!</p>
@@ -62,8 +61,6 @@ export default async function About() {
               <div dangerouslySetInnerHTML={{ __html: bio }}></div>
             )}
           </div>
-
-          {/* <BioEditor /> */}
           {/* Start date */}
           <div>
             <span

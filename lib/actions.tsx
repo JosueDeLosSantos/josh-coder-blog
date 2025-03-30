@@ -13,7 +13,7 @@ import {
 import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
 import { createClient } from "@supabase/supabase-js";
-import BioEditor from "@/app/ui/forms/BioEditor";
+
 const supabase = createClient(
   process.env.SUPABASE_PROJECT_URL as string,
   process.env.SUPABASE_ANON_KEY as string
