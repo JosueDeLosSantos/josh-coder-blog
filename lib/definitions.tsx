@@ -7,8 +7,8 @@ export type User = {
   name: string;
   email: string;
   password: string;
-  bio?: string;
-  image?: string | null;
+  bio: string | null;
+  image?: string;
   created_at: Date;
 };
 
@@ -43,6 +43,7 @@ export const UpdateProfileSchema = z.object({
     .min(2, { message: "Surname must be at least 2 characters long." })
     .trim(),
   email: z.string().email({ message: "Please enter a valid email." }).trim(),
+  bio: z.string().optional(),
 });
 
 export const UpdatePasswordSchema = z.object({
@@ -71,6 +72,7 @@ export type FormState =
         email?: string[];
         password?: string[];
         new_password?: string[];
+        bio?: string[];
       };
       message?: string;
     }

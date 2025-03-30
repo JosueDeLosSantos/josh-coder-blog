@@ -4,6 +4,7 @@ import Button from "@/app/ui/Button";
 import ProfileImage from "@/app/ui/ProfileImage";
 import Link from "next/link";
 import FotoUploader from "@/app/ui/forms/FotoUploader";
+// import BioEditor from "@/app/ui/forms/BioEditor";
 import { auth } from "@/auth";
 // postgres
 import { db } from "@vercel/postgres";
@@ -53,14 +54,16 @@ export default async function About() {
             </h1>
           </div>
           {/* bio */}
-          <div>
-            <p className={`${inter.className}`}>
-              {`${
-                bio === null &&
-                "You have no biography, edit your profile to be all set!"
-              }`}
-            </p>
+
+          <div className={`${inter.className}`}>
+            {bio === null || bio === "" ? (
+              <p>You have no biography, edit your profile to be all set!</p>
+            ) : (
+              <div dangerouslySetInnerHTML={{ __html: bio }}></div>
+            )}
           </div>
+
+          {/* <BioEditor /> */}
           {/* Start date */}
           <div>
             <span

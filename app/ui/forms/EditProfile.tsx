@@ -7,10 +7,11 @@ import Button from "@/app/ui/Button";
 import { Text } from "@/app/ui/forms/Fields";
 import type { User } from "@/lib/definitions";
 import Link from "next/link";
+import BioEditor from "@/app/ui/forms/BioEditor";
 
 export default function EditForm({ user }: { user: User }) {
   const [state, action, pending] = useActionState(updateProfile, undefined);
-  const { firstname, surname, email } = user;
+  const { firstname, surname, email, bio } = user;
 
   return (
     <div className="flex flex-col max-w-96 w-full items-center justify-center max-md:p-2 md:p-10 bg-white border border-primaryBorder rounded-lg md:min-w-[600px]">
@@ -44,6 +45,8 @@ export default function EditForm({ user }: { user: User }) {
           placeholder="johndoe@gmail.com"
           value={email}
         />
+
+        <BioEditor htmlFor="bio" value={bio} />
 
         {/* Do you want to update your password? */}
         <Link

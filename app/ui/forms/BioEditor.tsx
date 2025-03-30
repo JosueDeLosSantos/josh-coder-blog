@@ -2,9 +2,16 @@
 
 import React, { useState } from "react";
 import { Editor } from "primereact/editor";
+import { poppins } from "../fonts";
 
-export default function BioEditor() {
-  const [text, setText] = useState<string | null>(null);
+export default function BioEditor({
+  htmlFor,
+  value,
+}: {
+  htmlFor: string;
+  value: string | null;
+}) {
+  const [text, setText] = useState<string | null>(value);
 
   console.log(text);
 
@@ -22,11 +29,21 @@ export default function BioEditor() {
 
   return (
     <div className="card">
+      <label className={`${poppins.className} text-text`} htmlFor={htmlFor}>
+        Biography
+      </label>
       <Editor
-        value={text as string}
-        onTextChange={(e) => setText(e.htmlValue)}
+        value={text || ""}
+        onTextChange={(e) => setText(e.htmlValue || "")}
         headerTemplate={header}
         style={{ height: "120px" }}
+      />
+      <input
+        className="hidden"
+        id={htmlFor}
+        name={htmlFor}
+        value={text || ""}
+        readOnly
       />
     </div>
   );

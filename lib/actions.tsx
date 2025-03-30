@@ -13,6 +13,7 @@ import {
 import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
 import { createClient } from "@supabase/supabase-js";
+import BioEditor from "@/app/ui/forms/BioEditor";
 const supabase = createClient(
   process.env.SUPABASE_PROJECT_URL as string,
   process.env.SUPABASE_ANON_KEY as string
@@ -49,7 +50,7 @@ export async function signup(prevState: FormState, formData: FormData) {
       surname VARCHAR(255) NOT NULL,
       email VARCHAR(255) NOT NULL,
       password VARCHAR(255) NOT NULL,
-      bio TEXT,
+      bio TEXT NULL,
       image TEXT,
       created_at DATE NOT NULL DEFAULT CURRENT_DATE
     )`
@@ -130,6 +131,7 @@ export async function updateProfile(prevState: FormState, formData: FormData) {
     firstName: formData.get("firstName"),
     surname: formData.get("surname"),
     email: formData.get("email"),
+    bio: formData.get("bio"),
   });
 
   // If any form fields are invalid, return early
@@ -139,7 +141,7 @@ export async function updateProfile(prevState: FormState, formData: FormData) {
     };
   }
   // Prepare data for insertion into database
-  const { firstName, surname, email } = validatedFields.data;
+  const { firstName, surname, email, bio } = validatedFields.data;
 
   const client = await db.connect();
   // check in the db if there is a user with the same email
@@ -154,12 +156,13 @@ export async function updateProfile(prevState: FormState, formData: FormData) {
   if (!isSessionEmail && !user.rows.length) {
     // update the user's profile in the database
     await client.query(
-      `UPDATE users SET name = $1, firstname = $2, surname = $3, email = $4 WHERE email = $5`,
+      `UPDATE users SET name = $1, firstname = $2, surname = $3, email = $4, bio=$5 WHERE email = $6`,
       [
         `${firstName} ${surname}`,
         firstName,
         surname,
         email,
+        bio,
         session?.user?.email,
       ]
     );
@@ -181,8 +184,8 @@ export async function updateProfile(prevState: FormState, formData: FormData) {
   } else {
     // update the user's profile in the database
     await client.query(
-      `UPDATE users SET name = $1, firstname = $2, surname = $3 WHERE email = $4`,
-      [`${firstName} ${surname}`, firstName, surname, email]
+      `UPDATE users SET name = $1, firstname = $2, surname = $3, bio = $4 WHERE email = $5`,
+      [`${firstName} ${surname}`, firstName, surname, bio, email]
     );
     client.release();
 
