@@ -35,6 +35,10 @@ export default function AuthLayout({
     setSubmenu(!submenu);
   }
 
+  function closeSubMenu() {
+    setSubmenu(false);
+  }
+
   return (
     <div>
       {/* Background image */}
@@ -124,7 +128,7 @@ export default function AuthLayout({
             <RxExit className="size-8" />
           </div>
         </div>
-        <main>{children}</main>
+        <main onClick={() => closeSubMenu()}>{children}</main>
       </div>
     </div>
   );
