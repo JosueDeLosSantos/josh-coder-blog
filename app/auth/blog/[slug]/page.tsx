@@ -9,9 +9,12 @@ import Image from "next/image";
 import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import CommentsEditor from "@/app/ui/forms/CommentsEditor";
+import { auth } from "@/auth";
 
 //@ts-expect-error no logical error
 export default async function Page({ params }) {
+  const session = await auth();
   const { slug } = await params;
   const POST = defineQuery(`*[slug.current == '${slug}'][0]`);
   const { data: post }: { data: PostType } = await sanityFetch({ query: POST });
@@ -89,8 +92,8 @@ export default async function Page({ params }) {
 
   return (
     <div className="w-full">
-      <div className="bg-white max-w-4xl py-4 px-8 rounded-lg cursor-default mx-auto mt-24">
-        <div className="flex flex-col gap-4 lg:gap-5">
+      <div className="bg-white max-w-4xl py-4 rounded-lg cursor-default mx-auto mt-24">
+        <div className="flex flex-col gap-4 lg:gap-5 px-8">
           <div
             className={`${poppins.className} text-text font-semibold text-3xl md:text-4xl`}
           >
@@ -121,9 +124,16 @@ export default async function Page({ params }) {
               ))}
           </div>
         </div>
-        <div className={`${inter.className} text-left mt-10`}>
+        <div className={`${inter.className} text-left mt-10 px-8`}>
           <PortableText value={post.body} components={components} />
         </div>
+        {/* Comments */}
+
+        <CommentsEditor
+          htmlFor="comment"
+          session={session}
+          post_id={post._id}
+        />
       </div>
     </div>
   );

@@ -14,12 +14,12 @@ export const bungee = Bungee_Shade({
 
 export const ubuntu = Ubuntu({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500"],
 });
 
 export const orbitron = Orbitron({
   subsets: ["latin"],
-  weight: "500",
+  weight: ["400", "500"],
 });
 
 export const poppins = Poppins({
@@ -29,10 +29,10 @@ export const poppins = Poppins({
 
 export const inter = Inter({
   subsets: ["latin"],
-  weight: "400",
+  weight: ["400", "500", "600"],
 });
 
 export const oxanium = Oxanium({
   subsets: ["latin"],
-  weight: "600",
+  weight: ["400", "500", "600"],
 });

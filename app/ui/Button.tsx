@@ -27,7 +27,8 @@ export default function Button({
             layout === "form",
         },
         {
-          "bg-primary": bg === "primary",
+          "bg-primary": bg === "primary" && !disabled,
+          "bg-primaryLight": bg === "primary" && disabled,
           "bg-secondary border border-secondaryDark hover:bg-secondaryDark":
             bg === "secondary",
         }

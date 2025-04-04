@@ -44,7 +44,7 @@ export async function signup(prevState: FormState, formData: FormData) {
   // creates a user's table if it does not exist
   await client.query(
     `CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
       name VARCHAR(255) NOT NULL,
       firstname VARCHAR(255) NOT NULL,
       surname VARCHAR(255) NOT NULL,
@@ -195,6 +195,52 @@ export async function updateProfile(prevState: FormState, formData: FormData) {
   }
 }
 
+export async function submitComment(FormData: FormData) {
+  const comment = FormData.get("comment");
+  const email = FormData.get("email");
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+
+  // creates a user's table if it does not exist
+  await client.query(
+    `CREATE TABLE IF NOT EXISTS comments (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      message TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT now(),
+      updated_at TIMESTAMPTZ DEFAULT now(),
+      user_id UUID NOT NULL,
+      parent_id UUID NULL,
+      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      CONSTRAINT fk_parent FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+    )`
+  );
+  // await client.query(
+  //   `CREATE TABLE IF NOT EXISTS comments (
+  //     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  //     message TEXT NOT NULL,
+  //     created_at TIMESTAMPTZ DEFAULT now(),
+  //     updated_at TIMESTAMPTZ DEFAULT now(),
+  //     user_id UUID NOT NULL,
+  //     post_id UUID NOT NULL,
+  //     parent_id UUID NULL,
+  //     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  //     CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+  //     CONSTRAINT fk_parent FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+  //   )`
+  // );
+
+  // insert the comment into the database
+  await client.query(
+    `INSERT INTO comments (message, user_id) VALUES ($1, $2)`,
+    [comment, user.rows[0].id]
+  );
+
+  // close the connection
+  client.release();
+}
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
@@ -222,7 +268,10 @@ export async function logout() {
 export async function uploadFile(file: File) {
   const session = await auth();
   const pgClient = await db.connect();
-  const filePath = `joshcoderblog/${uuidv4()}${file.name}`;
+  const user = await pgClient.query(`SELECT * FROM users WHERE email = $1`, [
+    session?.user?.email,
+  ]);
+  const filePath = `joshcoderblog/${user.rows[0].id}${file.name}`;
   // upload the file
   const { data, error } = await supabase.storage
     .from("avatars")
@@ -231,11 +280,6 @@ export async function uploadFile(file: File) {
   if (error) {
     console.log(error);
   } else {
-    // check if there is a file path in the database
-    const user = await pgClient.query(`SELECT * FROM users WHERE email = $1`, [
-      session?.user?.email,
-    ]);
-
     if (user.rows[0].image) {
       // delete the file from supabase
       await supabase.storage.from("avatars").remove([user.rows[0].image]);
@@ -277,11 +321,6 @@ export async function getUrl(session: Session | null) {
   }
 }
 
-export async function getTempUrl(path: string) {
-  const { data } = supabase.storage.from("avatars").getPublicUrl(path);
-  return { src: data.publicUrl, date: Date.now() };
-}
-
 export async function getUserData() {
   const session = await auth();
   const pgClient = await db.connect();
@@ -319,8 +358,3 @@ export async function deleteFileAuto() {
     .remove(["joshcoderblog/profile.png"]);
   console.log("File deleted successfully", data);
 }
-
-// export async function deleteFile(path: string) {
-//   const { data } = await supabase.storage.from("avatars").remove([path]);
-//   return data;
-// }

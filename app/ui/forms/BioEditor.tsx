@@ -13,8 +13,6 @@ export default function BioEditor({
 }) {
   const [text, setText] = useState<string | null>(value);
 
-  console.log(text);
-
   const renderHeader = () => {
     return (
       <span className="ql-formats">
@@ -28,7 +26,7 @@ export default function BioEditor({
   const header = renderHeader();
 
   return (
-    <div className="card">
+    <div>
       <label className={`${poppins.className} text-text`} htmlFor={htmlFor}>
         Biography
       </label>
