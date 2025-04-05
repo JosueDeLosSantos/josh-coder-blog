@@ -4,7 +4,6 @@ import { getParentComments, getChildComments } from "@/lib/actions";
 import { useEffect, useState } from "react";
 import { Message } from "@/lib/definitions";
 import ProfileImage from "./ProfileImage";
-import { Session } from "next-auth";
 
 export default function CommentsThreads({ post_id }: { post_id: string }) {
   const [comments, setComments] = useState<Message[]>([]);
