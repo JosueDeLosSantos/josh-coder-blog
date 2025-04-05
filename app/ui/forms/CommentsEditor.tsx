@@ -81,11 +81,12 @@ export default function CommentsEditor({
             <div>
               <Button
                 disabled={text ? false : true}
-                children="Submit"
                 layout="form"
                 type="submit"
                 bg="primary"
-              />
+              >
+                Submit
+              </Button>
             </div>
           </div>
         </form>
