@@ -77,3 +77,11 @@ export type FormState =
       message?: string;
     }
   | undefined;
+
+export type Message = {
+  id: string;
+  message: string;
+  date: Date;
+  name: string;
+  image: string;
+};

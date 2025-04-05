@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import { getImageUrl } from "@/lib/actions";
 
 export default function ProfileImage({
   src,
@@ -9,15 +11,22 @@ export default function ProfileImage({
   height,
   width,
 }: {
-  src: string | null;
+  src: string | null | undefined;
   alt: string;
   className: string;
   height: number;
   width: number;
 }) {
+  const [imageUrl, setImageUrl] = useState<string>("/profile.png");
+  useEffect(() => {
+    (async () => {
+      const image = await getImageUrl(src);
+      setImageUrl(image);
+    })();
+  }, []);
   return (
     <Image
-      src={src || "/profile.png"}
+      src={imageUrl}
       alt={alt}
       className={className}
       height={height}

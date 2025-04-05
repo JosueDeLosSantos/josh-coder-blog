@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { Editor } from "primereact/editor";
 import { Session } from "next-auth";
 import ProfileImage from "../ProfileImage";
-import { getUrl } from "@/lib/actions";
 import Button from "@/app/ui/Button";
 import { poppins } from "@/app/ui/fonts";
 import { submitComment } from "@/lib/actions";
@@ -21,7 +20,6 @@ export default function CommentsEditor({
   post_id: string;
 }) {
   const [text, setText] = useState<string>(value || "");
-  const [imageUrl, setImageUrl] = useState<string>("/profile.png");
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -31,13 +29,6 @@ export default function CommentsEditor({
     await submitComment(formData);
     setText("");
   }
-
-  useEffect(() => {
-    (async () => {
-      const image = await getUrl(session);
-      setImageUrl(image);
-    })();
-  }, [session]);
 
   const renderHeader = () => {
     return (
@@ -63,7 +54,7 @@ export default function CommentsEditor({
           <div className="cursor-pointer ">
             <ProfileImage
               className="ring-1 rounded-full ring-primaryBorder bg-white"
-              src={imageUrl}
+              src={session?.user?.image}
               width={38}
               height={38}
               alt="Picture of the user"

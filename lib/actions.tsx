@@ -1,7 +1,6 @@
 "use server";
 
 import { signIn, signOut, auth } from "@/auth";
-import { v4 as uuidv4 } from "uuid";
 import { AuthError, Session } from "next-auth";
 import { redirect } from "next/navigation";
 import {
@@ -13,6 +12,8 @@ import {
 import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
 import { createClient } from "@supabase/supabase-js";
+import { PostType } from "@/app/types";
+import { Message } from "@/lib/definitions";
 
 const supabase = createClient(
   process.env.SUPABASE_PROJECT_URL as string,
@@ -195,52 +196,6 @@ export async function updateProfile(prevState: FormState, formData: FormData) {
   }
 }
 
-export async function submitComment(FormData: FormData) {
-  const comment = FormData.get("comment");
-  const email = FormData.get("email");
-  const client = await db.connect();
-  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
-    email,
-  ]);
-
-  // creates a user's table if it does not exist
-  await client.query(
-    `CREATE TABLE IF NOT EXISTS comments (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      message TEXT NOT NULL,
-      created_at TIMESTAMPTZ DEFAULT now(),
-      updated_at TIMESTAMPTZ DEFAULT now(),
-      user_id UUID NOT NULL,
-      parent_id UUID NULL,
-      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      CONSTRAINT fk_parent FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
-    )`
-  );
-  // await client.query(
-  //   `CREATE TABLE IF NOT EXISTS comments (
-  //     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  //     message TEXT NOT NULL,
-  //     created_at TIMESTAMPTZ DEFAULT now(),
-  //     updated_at TIMESTAMPTZ DEFAULT now(),
-  //     user_id UUID NOT NULL,
-  //     post_id UUID NOT NULL,
-  //     parent_id UUID NULL,
-  //     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-  //     CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-  //     CONSTRAINT fk_parent FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
-  //   )`
-  // );
-
-  // insert the comment into the database
-  await client.query(
-    `INSERT INTO comments (message, user_id) VALUES ($1, $2)`,
-    [comment, user.rows[0].id]
-  );
-
-  // close the connection
-  client.release();
-}
-
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData
@@ -296,27 +251,11 @@ export async function uploadFile(file: File) {
   }
 }
 
-export async function getUrl(session: Session | null) {
-  const pgClient = await db.connect();
-  if (session) {
-    const user = await pgClient.query(`SELECT * FROM users WHERE email = $1`, [
-      session?.user?.email,
-    ]);
-    // check if there is a file path in the database
-    if (user.rows[0].image) {
-      const { data } = supabase.storage
-        .from("avatars")
-        .getPublicUrl(user.rows[0].image);
-
-      pgClient.release();
-      return data.publicUrl;
-    } else {
-      // if there is no file path, return the default image
-      pgClient.release();
-      return "/profile.png";
-    }
+export async function getImageUrl(imgSrc: string | null | undefined) {
+  if (typeof imgSrc === "string" && imgSrc !== "/profile.png") {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(imgSrc);
+    return data.publicUrl;
   } else {
-    pgClient.release();
     return "/profile.png";
   }
 }
@@ -358,3 +297,98 @@ export async function deleteFileAuto() {
     .remove(["joshcoderblog/profile.png"]);
   console.log("File deleted successfully", data);
 }
+
+export async function addPost(post: PostType) {
+  const client = await db.connect();
+  await client.query(`CREATE TABLE IF NOT EXISTS posts (
+    id UUID PRIMARY KEY NOT NULL,
+    slug TEXT NOT NULL
+  )`);
+  // check if there is a post with the same id
+  const postExists = await client.query(`SELECT * FROM posts WHERE id = $1`, [
+    post._id,
+  ]);
+  // if the post does not exist, insert it into the database
+  if (!postExists.rows.length) {
+    await client.query(`INSERT INTO posts (id, slug) VALUES ($1, $2)`, [
+      post._id,
+      post.slug.current,
+    ]);
+  }
+
+  client.release();
+}
+
+export async function submitComment(FormData: FormData) {
+  const post_id = FormData.get("post_id");
+  const comment = FormData.get("comment");
+  const email = FormData.get("email");
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+
+  // creates a user's table if it does not exist
+  await client.query(
+    `CREATE TABLE IF NOT EXISTS comments (
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      message TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT now(),
+      updated_at TIMESTAMPTZ DEFAULT now(),
+      user_id UUID NOT NULL,
+      post_id UUID NOT NULL,
+      parent_id UUID NULL,
+      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+      CONSTRAINT fk_parent FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+    )`
+  );
+
+  // insert the comment into the database
+  await client.query(
+    `INSERT INTO comments (message, user_id, post_id) VALUES ($1, $2, $3)`,
+    [comment, user.rows[0].id, post_id]
+  );
+
+  // close the connection
+  client.release();
+}
+
+export async function getParentComments(post_id: string) {
+  const client = await db.connect();
+  // get the parent comments
+  const result = await client.query(
+    `SELECT comments.id AS id, comments.message AS message, comments.created_at AS date, users.name, users.image FROM comments JOIN posts ON comments.post_id = posts.id JOIN users ON comments.user_id = users.id WHERE posts.id = $1 AND comments.parent_id IS NULL`,
+    [post_id]
+  );
+  // close the connection
+  client.release();
+  const comments: Message[] = result.rows;
+  return comments;
+}
+
+export async function getChildComments(parent_id: string) {
+  const client = await db.connect();
+  // get the child comments
+  const result = await client.query(
+    `SELECT comments.id AS id, comments.message AS message, comments.created_at AS date, users.name, users.image FROM comments JOIN posts ON comments.post_id = posts.id JOIN users ON comments.user_id = users.id WHERE comments.parent_id = $1`,
+    [parent_id]
+  );
+  // close the connection
+  client.release();
+  const comments: Message[] = result.rows;
+  return comments;
+}
+
+// async function createLikesTable() {
+//   await db.query(`
+//     CREATE TABLE IF NOT EXISTS likes (
+//       user_id UUID NOT NULL,
+//       comment_id UUID NOT NULL,
+//       PRIMARY KEY (user_id, comment_id),
+//       CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+//       CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
+//     );
+//   `);
+//   console.log("Likes table created successfully!");
+// }

@@ -10,7 +10,9 @@ import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import CommentsEditor from "@/app/ui/forms/CommentsEditor";
+import CommentsThreads from "@/app/ui/CommentsThreads";
 import { auth } from "@/auth";
+import { addPost } from "@/lib/actions";
 
 //@ts-expect-error no logical error
 export default async function Page({ params }) {
@@ -18,6 +20,8 @@ export default async function Page({ params }) {
   const { slug } = await params;
   const POST = defineQuery(`*[slug.current == '${slug}'][0]`);
   const { data: post }: { data: PostType } = await sanityFetch({ query: POST });
+  // add post to sql db
+  await addPost(post);
 
   // image builder
   const { projectId, dataset } = client.config();
@@ -134,6 +138,7 @@ export default async function Page({ params }) {
           session={session}
           post_id={post._id}
         />
+        <CommentsThreads /* comments={[]} */ post_id={post._id} />
       </div>
     </div>
   );
