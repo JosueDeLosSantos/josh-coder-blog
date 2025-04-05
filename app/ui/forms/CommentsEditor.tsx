@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Editor } from "primereact/editor";
 import { Session } from "next-auth";
 import ProfileImage from "../ProfileImage";

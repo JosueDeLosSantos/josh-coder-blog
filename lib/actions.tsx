@@ -1,7 +1,7 @@
 "use server";
 
 import { signIn, signOut, auth } from "@/auth";
-import { AuthError, Session } from "next-auth";
+import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import {
   SignupFormSchema,
