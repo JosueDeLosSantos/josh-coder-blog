@@ -10,7 +10,6 @@ import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import CommentsEditor from "@/app/ui/forms/CommentsEditor";
-import CommentsThreads from "@/app/ui/CommentsThreads";
 import { auth } from "@/auth";
 import { addPost } from "@/lib/actions";
 
@@ -138,7 +137,6 @@ export default async function Page({ params }) {
           session={session}
           post_id={post._id}
         />
-        <CommentsThreads /* comments={[]} */ post_id={post._id} />
       </div>
     </div>
   );

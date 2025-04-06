@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Editor } from "primereact/editor";
 import { Session } from "next-auth";
 import ProfileImage from "../ProfileImage";
 import Button from "@/app/ui/Button";
 import { poppins } from "@/app/ui/fonts";
-import { submitComment } from "@/lib/actions";
+import { getParentComments, submitComment, deleteComment } from "@/lib/actions";
+import CommentsThreads from "../CommentsThreads";
+import { Message } from "@/lib/definitions";
 
 export default function CommentsEditor({
   htmlFor,
@@ -20,6 +22,20 @@ export default function CommentsEditor({
   post_id: string;
 }) {
   const [text, setText] = useState<string>(value || "");
+  const [comments, setComments] = useState<Message[]>([]);
+  useEffect(() => {
+    (async () => {
+      const comments: Message[] = await getParentComments(post_id);
+      setComments(comments);
+    })();
+  }, [post_id]);
+
+  async function dumpComment(comment_id: string) {
+    await deleteComment(comment_id);
+    // update comments threads
+    const updatedComments = await getParentComments(post_id);
+    setComments(updatedComments);
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,6 +44,9 @@ export default function CommentsEditor({
     formData.append("email", session?.user?.email || "");
     await submitComment(formData);
     setText("");
+    // update comments threads
+    const updatedComments = await getParentComments(post_id);
+    setComments(updatedComments);
   }
 
   const renderHeader = () => {
@@ -91,6 +110,11 @@ export default function CommentsEditor({
           </div>
         </form>
       )}
+      <CommentsThreads
+        comments={comments}
+        session={session}
+        dumpComment={dumpComment}
+      />
     </div>
   );
 }

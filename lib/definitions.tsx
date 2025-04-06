@@ -83,5 +83,6 @@ export type Message = {
   message: string;
   date: Date;
   name: string;
+  email: string;
   image: string;
 };

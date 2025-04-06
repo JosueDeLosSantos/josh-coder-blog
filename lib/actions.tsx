@@ -358,7 +358,7 @@ export async function getParentComments(post_id: string) {
   const client = await db.connect();
   // get the parent comments
   const result = await client.query(
-    `SELECT comments.id AS id, comments.message AS message, comments.created_at AS date, users.name, users.image FROM comments JOIN posts ON comments.post_id = posts.id JOIN users ON comments.user_id = users.id WHERE posts.id = $1 AND comments.parent_id IS NULL`,
+    `SELECT comments.id AS id, comments.message AS message, comments.created_at AS date, users.name, users.image, users.email FROM comments JOIN posts ON comments.post_id = posts.id JOIN users ON comments.user_id = users.id WHERE posts.id = $1 AND comments.parent_id IS NULL`,
     [post_id]
   );
   // close the connection
@@ -378,6 +378,14 @@ export async function getChildComments(parent_id: string) {
   client.release();
   const comments: Message[] = result.rows;
   return comments;
+}
+
+export async function deleteComment(comment_id: string) {
+  const client = await db.connect();
+  // delete the comment
+  await client.query(`DELETE FROM comments WHERE id = $1`, [comment_id]);
+  // close the connection
+  client.release();
 }
 
 // async function createLikesTable() {
