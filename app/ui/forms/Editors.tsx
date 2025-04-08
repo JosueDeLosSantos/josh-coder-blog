@@ -6,12 +6,7 @@ import { poppins } from "../fonts";
 import { Session } from "next-auth";
 import ProfileImage from "../ProfileImage";
 import Button, { DismissButton } from "@/app/ui/Button";
-import {
-  getParentComments,
-  getChildComments,
-  submitComment,
-  deleteComment,
-} from "@/lib/actions";
+import { getParentComments, submitComment, deleteComment } from "@/lib/actions";
 import CommentsThreads from "../CommentsThreads";
 import { Message } from "@/lib/definitions";
 import { BiMessageRounded } from "react-icons/bi";
