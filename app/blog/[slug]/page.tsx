@@ -9,6 +9,7 @@ import Image from "next/image";
 import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
+import { CommentsEditor } from "@/app/ui/forms/Editors";
 
 //@ts-expect-error no logical error
 export default async function Page({ params }) {
@@ -121,9 +122,14 @@ export default async function Page({ params }) {
               ))}
           </div>
         </div>
-        <div className={`${inter.className} text-left mt-10`}>
+        <div
+          className={`${inter.className} text-left mt-10 px-4 md:px-16 text-lg`}
+        >
           <PortableText value={post.body} components={components} />
         </div>
+        {/* Comments */}
+
+        <CommentsEditor htmlFor="comment" post_id={post._id} />
       </div>
     </div>
   );

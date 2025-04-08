@@ -11,10 +11,12 @@ export default function MenubarOptions({
   vertical,
   session,
   openSubMenu,
+  setIsAuth,
 }: {
   vertical: boolean;
   session: Session | null;
   openSubMenu?: () => void;
+  setIsAuth?: (isAuth: boolean) => void;
 }) {
   const pathname = usePathname();
   const blogAddress = session ? "/auth/blog" : "/blog";
@@ -24,16 +26,17 @@ export default function MenubarOptions({
     <ul
       className={clsx(
         poppins.className,
-        "flex items-center gap-5 font-semibold text-primary tracking-wider 2xl:text-base",
-        { "flex-col items-start": vertical }
+        "flex gap-5 font-semibold text-primary tracking-wider 2xl:text-base",
+        { "flex-col items-start": vertical },
+        { " items-center": !vertical }
       )}
     >
       {session && (
         <li onClick={() => openSubMenu && openSubMenu()}>
-          <div className="cursor-pointer ">
+          <div className={clsx("cursor-pointer ", { "pl-3": vertical })}>
             <ProfileImage
               className="ring-1 rounded-full ring-primaryBorder bg-white"
-              src={session?.user?.image}
+              session={session}
               width={38}
               height={38}
               alt="Picture of the user"
@@ -80,6 +83,15 @@ export default function MenubarOptions({
             {"}"}
           </span>
         </Link>
+      </li>
+
+      <li
+        onClick={() => setIsAuth && setIsAuth(false)}
+        className={clsx("flex gap-1", { hidden: !session || !vertical })}
+      >
+        <span className="opacity-0">{"{"}</span>
+        Sign Out
+        <span className="opacity-0">{"}"}</span>
       </li>
 
       {!session && (

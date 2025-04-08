@@ -63,7 +63,7 @@ export function CommentsEditor({
 }: {
   htmlFor: string;
   value?: string;
-  session: Session | null;
+  session?: Session | null;
   post_id: string;
 }) {
   const [text, setText] = useState<string>(value || "");
@@ -107,7 +107,7 @@ export function CommentsEditor({
   const header = renderHeader();
 
   return (
-    <div className="flex flex-col gap-8 mt-10 border-t border-blogBg py-8 px-8 md:px-16">
+    <div className="flex flex-col gap-8 mt-10 border-t border-blogBg py-8 px-4 md:px-16">
       <h2
         className={`${poppins.className} text-text font-semibold text-3xl md:text-4xl`}
       >
@@ -118,7 +118,7 @@ export function CommentsEditor({
           <div className="cursor-pointer ">
             <ProfileImage
               className="ring-1 rounded-full ring-primaryBorder bg-white"
-              src={session?.user?.image}
+              session={session}
               width={38}
               height={38}
               alt="Picture of the user"

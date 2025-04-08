@@ -1,7 +1,7 @@
 "use server";
 
 import { signIn, signOut, auth } from "@/auth";
-import { AuthError } from "next-auth";
+import { AuthError, Session } from "next-auth";
 import { redirect } from "next/navigation";
 import {
   SignupFormSchema,
@@ -251,9 +251,27 @@ export async function uploadFile(file: File) {
   }
 }
 
-export async function getImageUrl(imgSrc: string | null | undefined) {
-  if (typeof imgSrc === "string" && imgSrc !== "/profile.png") {
-    const { data } = supabase.storage.from("avatars").getPublicUrl(imgSrc);
+export async function getImageUrl(
+  session: Session | null,
+  userImage?: string | null
+) {
+  if (session) {
+    const pClient = await db.connect();
+    const user = await pClient.query(`SELECT * FROM users WHERE email = $1`, [
+      session?.user?.email,
+    ]);
+    pClient.release();
+    const userProfileImage = user.rows[0]?.image;
+    if (!userProfileImage) {
+      return "/profile.png";
+    } else {
+      const { data } = supabase.storage
+        .from("avatars")
+        .getPublicUrl(userProfileImage);
+      return data.publicUrl;
+    }
+  } else if (!session && userImage && userImage !== "/profile.png") {
+    const { data } = supabase.storage.from("avatars").getPublicUrl(userImage);
     return data.publicUrl;
   } else {
     return "/profile.png";

@@ -3,15 +3,18 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getImageUrl } from "@/lib/actions";
+import { Session } from "next-auth";
 
 export default function ProfileImage({
-  src,
+  session,
+  userImage,
   alt,
   className,
   height,
   width,
 }: {
-  src: string | null | undefined;
+  session?: Session | null;
+  userImage?: string | null;
   alt: string;
   className: string;
   height: number;
@@ -20,8 +23,13 @@ export default function ProfileImage({
   const [imageUrl, setImageUrl] = useState<string>("/profile.png");
   useEffect(() => {
     (async () => {
-      const image = await getImageUrl(src);
-      setImageUrl(image);
+      if (session) {
+        const image = await getImageUrl(session);
+        if (image) setImageUrl(image);
+      } else {
+        const image = await getImageUrl(null, userImage);
+        if (image) setImageUrl(image);
+      }
     })();
   }, []);
   return (

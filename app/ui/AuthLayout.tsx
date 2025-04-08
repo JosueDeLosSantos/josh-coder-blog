@@ -68,7 +68,7 @@ export default function AuthLayout({
           className="mb-5 ml-auto mr-8 text-xl md:text-2xl 2xl:text-3xl"
         />
         {/* Sidebar options */}
-        <MenuOptions session={session} vertical={true} />
+        <MenuOptions session={session} vertical={true} setIsAuth={setIsAuth} />
       </div>
       <div>
         {/* navbar */}

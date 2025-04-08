@@ -127,7 +127,9 @@ export default async function Page({ params }) {
               ))}
           </div>
         </div>
-        <div className={`${inter.className} text-left mt-10 px-8 md:px-16`}>
+        <div
+          className={`${inter.className} text-left mt-10 px-4 md:px-16 text-lg`}
+        >
           <PortableText value={post.body} components={components} />
         </div>
         {/* Comments */}
