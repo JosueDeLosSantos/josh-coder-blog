@@ -4,7 +4,6 @@ import Button from "@/app/ui/Button";
 import ProfileImage from "@/app/ui/ProfileImage";
 import Link from "next/link";
 import FotoUploader from "@/app/ui/forms/FotoUploader";
-// import BioEditor from "@/app/ui/forms/BioEditor";
 import { auth } from "@/auth";
 // postgres
 import { db } from "@vercel/postgres";

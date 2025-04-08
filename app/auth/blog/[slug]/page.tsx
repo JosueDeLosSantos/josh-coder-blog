@@ -9,7 +9,7 @@ import Image from "next/image";
 import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import CommentsEditor from "@/app/ui/forms/CommentsEditor";
+import { CommentsEditor } from "@/app/ui/forms/Editors";
 import { auth } from "@/auth";
 import { addPost } from "@/lib/actions";
 
@@ -127,7 +127,7 @@ export default async function Page({ params }) {
               ))}
           </div>
         </div>
-        <div className={`${inter.className} text-left mt-10 px-8`}>
+        <div className={`${inter.className} text-left mt-10 px-8 md:px-16`}>
           <PortableText value={post.body} components={components} />
         </div>
         {/* Comments */}

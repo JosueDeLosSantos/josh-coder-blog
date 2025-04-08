@@ -7,7 +7,7 @@ import Button from "@/app/ui/Button";
 import { Text } from "@/app/ui/forms/Fields";
 import type { User } from "@/lib/definitions";
 import Link from "next/link";
-import BioEditor from "@/app/ui/forms/BioEditor";
+import { BioEditor } from "@/app/ui/forms/Editors";
 
 export default function EditForm({ user }: { user: User }) {
   const [state, action, pending] = useActionState(updateProfile, undefined);

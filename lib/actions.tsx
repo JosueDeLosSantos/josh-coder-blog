@@ -323,6 +323,7 @@ export async function submitComment(FormData: FormData) {
   const post_id = FormData.get("post_id");
   const comment = FormData.get("comment");
   const email = FormData.get("email");
+  const parent_id = FormData.get("parent_id");
   const client = await db.connect();
   const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
     email,
@@ -344,14 +345,22 @@ export async function submitComment(FormData: FormData) {
     )`
   );
 
-  // insert the comment into the database
-  await client.query(
-    `INSERT INTO comments (message, user_id, post_id) VALUES ($1, $2, $3)`,
-    [comment, user.rows[0].id, post_id]
-  );
-
-  // close the connection
-  client.release();
+  if (parent_id === null || parent_id === undefined) {
+    await client.query(
+      `INSERT INTO comments (message, user_id, post_id) VALUES ($1, $2, $3)`,
+      [comment, user.rows[0].id, post_id]
+    );
+    // close the connection
+    client.release();
+  } else {
+    const result = await client.query(
+      `INSERT INTO comments (message, user_id, post_id, parent_id) VALUES ($1, $2, $3, $4) RETURNING *`,
+      [comment, user.rows[0].id, post_id, parent_id]
+    );
+    // close the connection
+    client.release();
+    return result.rows[0];
+  }
 }
 
 export async function getParentComments(post_id: string) {
@@ -371,7 +380,7 @@ export async function getChildComments(parent_id: string) {
   const client = await db.connect();
   // get the child comments
   const result = await client.query(
-    `SELECT comments.id AS id, comments.message AS message, comments.created_at AS date, users.name, users.image FROM comments JOIN posts ON comments.post_id = posts.id JOIN users ON comments.user_id = users.id WHERE comments.parent_id = $1`,
+    `SELECT comments.id AS id, comments.message AS message, comments.created_at AS date, users.name, users.image, users.email FROM comments JOIN posts ON comments.post_id = posts.id JOIN users ON comments.user_id = users.id WHERE comments.parent_id = $1`,
     [parent_id]
   );
   // close the connection
