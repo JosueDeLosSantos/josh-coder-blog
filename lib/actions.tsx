@@ -415,15 +415,53 @@ export async function deleteComment(comment_id: string) {
   client.release();
 }
 
-// async function createLikesTable() {
-//   await db.query(`
-//     CREATE TABLE IF NOT EXISTS likes (
-//       user_id UUID NOT NULL,
-//       comment_id UUID NOT NULL,
-//       PRIMARY KEY (user_id, comment_id),
-//       CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-//       CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
-//     );
-//   `);
-//   console.log("Likes table created successfully!");
-// }
+export async function likeComment(comment_id: string, email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS comments_likes (
+      user_id UUID NOT NULL,
+      comment_id UUID NOT NULL,
+      PRIMARY KEY (user_id, comment_id),
+      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
+    );
+  `);
+
+  // check if the user has already liked the comment
+  const likeExists = await client.query(
+    `SELECT * FROM comments_likes WHERE user_id = $1 AND comment_id = $2`,
+    [user.rows[0].id, comment_id]
+  );
+  // if the user has not liked the comment, insert the like into the database
+  if (!likeExists.rows.length) {
+    await client.query(
+      `INSERT INTO comments_likes (user_id, comment_id) VALUES ($1, $2)`,
+      [user.rows[0].id, comment_id]
+    );
+  } else {
+    // if the user has liked the comment, delete the like from the database
+    await client.query(
+      `DELETE FROM comments_likes WHERE user_id = $1 AND comment_id = $2`,
+      [user.rows[0].id, comment_id]
+    );
+  }
+
+  client.release();
+  return likeExists.rows.length ? true : false;
+}
+
+export async function getCommentLikes(comment_id: string) {
+  const client = await db.connect();
+  // get the number of likes for the comment
+  const result = await client.query(
+    `SELECT COUNT(*) AS likes FROM comments_likes WHERE comment_id = $1`,
+    [comment_id]
+  );
+  const likes: string = result.rows[0].likes;
+  // close the connection
+  client.release();
+  return likes;
+}

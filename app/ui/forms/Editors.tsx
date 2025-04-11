@@ -6,11 +6,18 @@ import { poppins } from "../fonts";
 import { Session } from "next-auth";
 import ProfileImage from "../ProfileImage";
 import Button, { DismissButton } from "@/app/ui/Button";
-import { getParentComments, submitComment, deleteComment } from "@/lib/actions";
+import {
+  getParentComments,
+  submitComment,
+  deleteComment,
+  likeComment,
+  getCommentLikes,
+} from "@/lib/actions";
 import CommentsThreads from "../CommentsThreads";
 import { Message } from "@/lib/definitions";
 import { BiMessageRounded } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
+import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 
 export function BioEditor({
   htmlFor,
@@ -186,6 +193,7 @@ export function ReplyEditor({
 }) {
   const [text, setText] = useState<string>(value || "");
   const [editor, setEditor] = useState(false);
+  const [likes, setLikes] = useState(0);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -198,6 +206,24 @@ export function ReplyEditor({
     setText("");
     setEditor(false);
   }
+
+  async function handleLike() {
+    if (session?.user?.email) {
+      const result = await likeComment(parent_id, session.user.email);
+      if (result) {
+        setLikes(likes - 1);
+      } else {
+        setLikes(likes + 1);
+      }
+    }
+  }
+
+  useEffect(() => {
+    (async () => {
+      const result = await getCommentLikes(parent_id);
+      setLikes(Number(result));
+    })();
+  }, [parent_id]);
 
   const renderHeader = () => {
     return (
@@ -213,11 +239,28 @@ export function ReplyEditor({
 
   return (
     <div key={`${parent_id}-editor`} className="flex flex-col gap-8">
+      {/* OPTIONS */}
       {!editor && (
         <div
           key={`${parent_id}-button-group`}
           className="flex items-center gap-1"
         >
+          {/* Likes */}
+          <button
+            key={`${parent_id}-likes`}
+            id={`${parent_id}-likes`}
+            type="button"
+            className="flex items-center gap-2 hover:bg-blogBg px-2 py-1 rounded-md mt-1"
+            onClick={() => handleLike()}
+          >
+            {likes > 0 ? (
+              <IoHeartSharp className="text-lg" />
+            ) : (
+              <IoHeartOutline className="text-lg" />
+            )}{" "}
+            {likes > 0 && `${likes}`}
+          </button>
+          {/* Reply */}
           <button
             key={`${parent_id}-reply`}
             id={`${parent_id}-reply`}
@@ -227,6 +270,7 @@ export function ReplyEditor({
           >
             <BiMessageRounded className="text-lg" /> Reply
           </button>
+          {/* Delete */}
           {session?.user?.email === email && (
             <button
               key={`${parent_id}-delete`}
