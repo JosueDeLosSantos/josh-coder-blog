@@ -12,6 +12,7 @@ import {
   deleteComment,
   likeComment,
   getCommentLikes,
+  isCommentLiked,
 } from "@/lib/actions";
 import CommentsThreads from "../CommentsThreads";
 import { Message } from "@/lib/definitions";
@@ -194,6 +195,7 @@ export function ReplyEditor({
   const [text, setText] = useState<string>(value || "");
   const [editor, setEditor] = useState(false);
   const [likes, setLikes] = useState(0);
+  const [isLiked, setIsLiked] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -212,16 +214,22 @@ export function ReplyEditor({
       const result = await likeComment(parent_id, session.user.email);
       if (result) {
         setLikes(likes - 1);
+        setIsLiked(false);
       } else {
         setLikes(likes + 1);
+        setIsLiked(true);
       }
     }
   }
 
   useEffect(() => {
     (async () => {
-      const result = await getCommentLikes(parent_id);
-      setLikes(Number(result));
+      if (session?.user?.email) {
+        const liked = await isCommentLiked(parent_id, session.user.email);
+        setIsLiked(liked);
+      }
+      const commentsAmount = await getCommentLikes(parent_id);
+      setLikes(Number(commentsAmount));
     })();
   }, [parent_id]);
 
@@ -253,7 +261,7 @@ export function ReplyEditor({
             className="flex items-center gap-2 hover:bg-blogBg px-2 py-1 rounded-md mt-1"
             onClick={() => handleLike()}
           >
-            {likes > 0 ? (
+            {isLiked ? (
               <IoHeartSharp className="text-lg" />
             ) : (
               <IoHeartOutline className="text-lg" />

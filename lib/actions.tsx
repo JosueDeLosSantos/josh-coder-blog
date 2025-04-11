@@ -465,3 +465,17 @@ export async function getCommentLikes(comment_id: string) {
   client.release();
   return likes;
 }
+
+export async function isCommentLiked(comment_id: string, email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  // check if the user has already liked the comment
+  const likeExists = await client.query(
+    `SELECT * FROM comments_likes WHERE user_id = $1 AND comment_id = $2`,
+    [user.rows[0].id, comment_id]
+  );
+  client.release();
+  return likeExists.rows.length ? true : false;
+}
