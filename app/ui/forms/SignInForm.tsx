@@ -8,19 +8,21 @@ import Button from "@/app/ui/Button";
 import Link from "next/link";
 import { Password, Text } from "@/app/ui/forms/Fields";
 
-export default function SignInForm() {
+export default function SignInForm({ slug }: { slug?: string }) {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/auth/blog";
+  const callbackUrl = slug
+    ? searchParams.get("callbackUrl") || `/auth/blog/${slug}`
+    : searchParams.get("callbackUrl") || "/auth/blog";
   const [state, action, pending] = useActionState(authenticate, undefined);
 
   return (
     <div className="flex flex-col max-w-96 w-full items-center justify-center p-10 md:p-10 bg-white border border-primaryBorder rounded-lg">
       <div className="mb-14">
-        <h2
+        <h3
           className={`${orbitron.className} font-medium text-primary text-2xl`}
         >
           Sign In
-        </h2>
+        </h3>
       </div>
       <form action={action} className="flex flex-col gap-4 w-full">
         {/* Email */}
@@ -30,11 +32,11 @@ export default function SignInForm() {
         {/* Sign up */}
         <div className="text-textLight text-center">
           <span
-            className={`${poppins.className} text-text`}
+            className={`${poppins.className}`}
           >{`Don't have an account?`}</span>{" "}
           <Link
             href="/signUp"
-            className={`${poppins.className} text-primaryLight cursor-pointer`}
+            className={`${poppins.className} text-primaryLight cursor-pointer hover:underline`}
           >
             Sign up
           </Link>

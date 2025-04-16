@@ -200,8 +200,10 @@ export async function authenticate(
   prevState: string | undefined,
   formData: FormData
 ) {
+  const callbackUrl = formData.get("redirectTo");
+
   try {
-    await signIn("credentials", formData);
+    await signIn("credentials", formData, { redirect: callbackUrl as string });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

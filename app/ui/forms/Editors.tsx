@@ -19,6 +19,7 @@ import { Message } from "@/lib/definitions";
 import { BiMessageRounded } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
+import Link from "next/link";
 
 export function BioEditor({
   htmlFor,
@@ -68,11 +69,16 @@ export function CommentsEditor({
   value,
   session,
   post_id,
+  slug,
 }: {
   htmlFor: string;
   value?: string;
   session?: Session | null;
   post_id: string;
+  slug?: {
+    current: string;
+    _type: "slug";
+  };
 }) {
   const [text, setText] = useState<string>(value || "");
   const [comments, setComments] = useState<Message[]>([]);
@@ -115,12 +121,25 @@ export function CommentsEditor({
   const header = renderHeader();
 
   return (
-    <div className="flex flex-col gap-8 mt-10 border-t border-blogBg py-8 px-4 md:px-16">
+    <div className="flex flex-col gap-14 mt-10 border-t border-blogBg py-8 px-4 md:px-16">
       <h2
         className={`${poppins.className} text-text font-semibold text-3xl md:text-4xl`}
       >
         Comments
       </h2>
+      {!session && (
+        <div className="text-textLight">
+          <span
+            className={`${poppins.className}`}
+          >{`Do you want to leave a comment?`}</span>{" "}
+          <Link
+            href={`/login/${slug?.current}`}
+            className={`${poppins.className} text-primaryLight cursor-pointer hover:underline`}
+          >
+            Log in
+          </Link>
+        </div>
+      )}
       {session && (
         <form onSubmit={handleSubmit} className="flex gap-2 items-start">
           <div className="cursor-pointer ">

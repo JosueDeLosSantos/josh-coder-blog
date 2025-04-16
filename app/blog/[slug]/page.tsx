@@ -129,7 +129,7 @@ export default async function Page({ params }) {
         </div>
         {/* Comments */}
 
-        <CommentsEditor htmlFor="comment" post_id={post._id} />
+        <CommentsEditor htmlFor="comment" post_id={post._id} slug={post.slug} />
       </div>
     </div>
   );

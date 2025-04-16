@@ -23,7 +23,7 @@ export default async function PostsList({
     });
   }
 
-  // Searches for posts that match the tag
+  // Searches for posts that match the query
   if (query.length > 0) {
     filteredPosts = posts.filter((post) => {
       return post.title.toLowerCase().includes(query.toLowerCase());
