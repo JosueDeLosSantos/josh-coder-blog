@@ -318,6 +318,8 @@ export async function deleteFileAuto() {
   console.log("File deleted successfully", data);
 }
 
+// Posts
+
 export async function addPost(post: PostType) {
   const client = await db.connect();
   await client.query(`CREATE TABLE IF NOT EXISTS posts (
@@ -338,6 +340,73 @@ export async function addPost(post: PostType) {
 
   client.release();
 }
+
+export async function likePost(post_id: string, email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS posts_likes (
+      user_id UUID NOT NULL,
+      post_id UUID NOT NULL,
+      PRIMARY KEY (user_id, post_id),
+      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+    );
+  `);
+
+  // check if the user has already liked the comment
+  const likeExists = await client.query(
+    `SELECT * FROM posts_likes WHERE user_id = $1 AND post_id = $2`,
+    [user.rows[0].id, post_id]
+  );
+  // if the user has not liked the comment, insert the like into the database
+  if (!likeExists.rows.length) {
+    await client.query(
+      `INSERT INTO posts_likes (user_id, post_id) VALUES ($1, $2)`,
+      [user.rows[0].id, post_id]
+    );
+  } else {
+    // if the user has liked the comment, delete the like from the database
+    await client.query(
+      `DELETE FROM posts_likes WHERE user_id = $1 AND post_id = $2`,
+      [user.rows[0].id, post_id]
+    );
+  }
+
+  client.release();
+  return likeExists.rows.length ? true : false;
+}
+
+export async function getPostLikes(post_id: string) {
+  const client = await db.connect();
+  // get the number of likes for the post
+  const result = await client.query(
+    `SELECT COUNT(*) AS likes FROM posts_likes WHERE post_id = $1`,
+    [post_id]
+  );
+  const likes: string = result.rows[0].likes;
+  // close the connection
+  client.release();
+  return likes;
+}
+
+export async function isPostLiked(post_id: string, email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  // check if the user has already liked the post
+  const likeExists = await client.query(
+    `SELECT * FROM posts_likes WHERE user_id = $1 AND post_id = $2`,
+    [user.rows[0].id, post_id]
+  );
+  client.release();
+  return likeExists.rows.length ? true : false;
+}
+
+// Comments
 
 export async function submitComment(FormData: FormData) {
   const post_id = FormData.get("post_id");

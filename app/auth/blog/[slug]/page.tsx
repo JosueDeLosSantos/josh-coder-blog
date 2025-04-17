@@ -12,6 +12,7 @@ import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { CommentsEditor } from "@/app/ui/forms/Editors";
 import { auth } from "@/auth";
 import { addPost } from "@/lib/actions";
+import PostsOptions from "@/app/ui/PostsOptions";
 
 //@ts-expect-error no logical error
 export default async function Page({ params }) {
@@ -95,6 +96,7 @@ export default async function Page({ params }) {
 
   return (
     <div className="w-full">
+      <PostsOptions session={session} post_id={post._id} />
       <div className="bg-white max-w-4xl py-4 rounded-lg cursor-default mx-auto mt-24">
         <div className="flex flex-col gap-4 lg:gap-5 px-8">
           <div
