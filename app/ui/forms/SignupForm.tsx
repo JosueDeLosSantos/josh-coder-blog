@@ -5,9 +5,14 @@ import { useActionState } from "react";
 import { orbitron } from "@/app/ui/fonts";
 import Button from "@/app/ui/Button";
 import { Password, Text } from "@/app/ui/forms/Fields";
+import { useSearchParams } from "next/navigation";
 
-export default function SignUpForm() {
+export default function SignUpForm({ slug }: { slug?: string }) {
+  const searchParams = useSearchParams();
   const [state, action, pending] = useActionState(signup, undefined);
+  const callbackUrl = slug
+    ? searchParams.get("callbackUrl") || `/login/${slug}`
+    : searchParams.get("callbackUrl") || "/login";
 
   return (
     <div className="flex flex-col max-w-96 w-full items-center justify-center p-10 md:p-10 bg-white border border-primaryBorder rounded-lg">
@@ -31,6 +36,7 @@ export default function SignUpForm() {
         <Password state={state} />
 
         {/* Sign Up */}
+        <input type="hidden" name="redirectTo" value={callbackUrl} />
         <div className="flex justify-center mt-4">
           <Button bg="secondary" disabled={pending} type="submit" layout="form">
             Submit

@@ -340,7 +340,9 @@ export function ReplyEditor({
               >
                 Submit
               </Button>
-              <DismissButton setEditor={setEditor}>Dismiss</DismissButton>
+              <div onClick={() => setEditor(false)}>
+                <DismissButton>Dismiss</DismissButton>
+              </div>
             </div>
           </div>
         </form>

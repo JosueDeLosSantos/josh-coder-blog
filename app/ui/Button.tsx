@@ -8,12 +8,14 @@ export default function Button({
   layout,
   children,
   bg,
+  fullWidth = false,
 }: {
   disabled: boolean;
   type: "button" | "submit";
   layout: "landing" | "form";
   children: string;
   bg: "primary" | "secondary";
+  fullWidth?: boolean;
 }) {
   return (
     <button
@@ -28,10 +30,13 @@ export default function Button({
             layout === "form",
         },
         {
-          "bg-primary": bg === "primary" && !disabled,
+          "bg-primary hover:bg-primaryDark": bg === "primary" && !disabled,
           "bg-primaryLight": bg === "primary" && disabled,
           "bg-secondary border border-secondaryDark hover:bg-secondaryDark":
             bg === "secondary",
+        },
+        {
+          "w-full": fullWidth,
         }
       )}
     >
@@ -42,16 +47,23 @@ export default function Button({
 
 export function DismissButton({
   children,
-  setEditor,
+  chat = true,
 }: {
   children: string;
-  setEditor: React.Dispatch<React.SetStateAction<boolean>>;
+  chat?: boolean;
 }) {
   return (
     <button
       type="button"
-      className="text-textMild hover:text-text hover:bg-blogBg max-2xl:font-medium 2xl:font-semibold max-md:text-sm md:text-base 2xl:text-lg max-md:px-4 max-2xl:py-2 md:px-6 2xl:px-8 2xl:py-3 rounded"
-      onClick={() => setEditor(false)}
+      className={clsx(
+        "hover:text-primary hover:bg-blogBg max-2xl:font-medium 2xl:font-semibold max-md:text-sm md:text-base 2xl:text-lg max-md:px-4 max-2xl:py-2 md:px-6 2xl:px-8 2xl:py-3 rounded",
+        {
+          "text-primaryLight ": chat,
+        },
+        {
+          "text-primary": !chat,
+        }
+      )}
     >
       {children}
     </button>

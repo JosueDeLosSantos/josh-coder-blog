@@ -96,7 +96,11 @@ export default async function Page({ params }) {
 
   return (
     <div className="w-full">
-      <PostsOptions session={session} post_id={post._id} />
+      <PostsOptions
+        session={session}
+        post_id={post._id}
+        slug={post.slug.current}
+      />
       <div className="bg-white max-w-4xl py-4 rounded-lg cursor-default mx-auto mt-24">
         <div className="flex flex-col gap-4 lg:gap-5 px-8">
           <div

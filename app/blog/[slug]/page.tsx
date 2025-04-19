@@ -10,9 +10,12 @@ import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { CommentsEditor } from "@/app/ui/forms/Editors";
+import PostsOptions from "@/app/ui/PostsOptions";
+import { auth } from "@/auth";
 
 //@ts-expect-error no logical error
 export default async function Page({ params }) {
+  const session = await auth();
   const { slug } = await params;
   const POST = defineQuery(`*[slug.current == '${slug}'][0]`);
   const { data: post }: { data: PostType } = await sanityFetch({ query: POST });
@@ -90,6 +93,11 @@ export default async function Page({ params }) {
 
   return (
     <div className="w-full">
+      <PostsOptions
+        session={session}
+        post_id={post._id}
+        slug={post.slug.current}
+      />
       <div className="bg-white max-w-4xl py-4 px-8 rounded-lg cursor-default mx-auto mt-24">
         <div className="flex flex-col gap-4 lg:gap-5">
           <div

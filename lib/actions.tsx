@@ -79,8 +79,10 @@ export async function signup(prevState: FormState, formData: FormData) {
   // close the connection
   client.release();
 
+  const callbackUrl = formData.get("redirectTo");
+
   // Redirect the user to the sign in page
-  redirect("/login");
+  redirect(`${callbackUrl}`);
 }
 
 export async function updatePassword(prevState: FormState, formData: FormData) {

@@ -6,16 +6,24 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { RiHeartAddLine, RiHeartAddFill } from "react-icons/ri";
 import clsx from "clsx";
+import LoginAlert from "./LoginAlert";
 
 export default function PostsOptions({
   session,
   post_id,
+  slug,
 }: {
   session: Session | null;
   post_id: string;
+  slug: string;
 }) {
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
+
+  function handleClose() {
+    setIsLoggedOut(!isLoggedOut);
+  }
 
   async function handleLike() {
     if (session?.user?.email) {
@@ -27,6 +35,8 @@ export default function PostsOptions({
         setLikes(likes + 1);
         setIsLiked(true);
       }
+    } else {
+      setIsLoggedOut(true);
     }
   }
 
@@ -42,23 +52,29 @@ export default function PostsOptions({
   }, [post_id]);
 
   return (
-    <div className="flex flex-col fixed top-36 left-4 max-lg:hidden">
-      <div className="flex flex-col">
-        <button onClick={() => handleLike()}>
-          {isLiked ? (
-            <RiHeartAddFill className="size-6 text-secondaryDark hover:text-secondaryDark" />
-          ) : (
-            <RiHeartAddLine className="size-6 text-textMild hover:text-secondaryDark" />
-          )}
-        </button>
-        <span
-          className={clsx("text-textMild text-sm text-center", {
-            "opacity-0": likes === 0,
-          })}
-        >
-          {likes}
-        </span>
+    <>
+      <div className="max-lg:bg-white max-lg:border-t-[0.5px] flex flex-row max-lg:justify-center max-lg:w-full lg:flex-col fixed bottom-0 lg:top-36 p-4 z-10">
+        <div className="flex max-lg:gap-1 lg:flex-col">
+          <button onClick={() => handleLike()}>
+            {isLiked ? (
+              <RiHeartAddFill className="size-6 text-secondaryDark hover:text-secondaryDark" />
+            ) : (
+              <RiHeartAddLine className="size-6 text-textMild hover:text-secondaryDark" />
+            )}
+          </button>
+          <div
+            className={clsx(
+              "text-textMild text-sm flex justify-center max-lg:items-end",
+              {
+                "opacity-0": likes === 0,
+              }
+            )}
+          >
+            <span>{likes}</span>
+          </div>
+        </div>
       </div>
-    </div>
+      {isLoggedOut && <LoginAlert slug={slug} handleClose={handleClose} />}
+    </>
   );
 }
