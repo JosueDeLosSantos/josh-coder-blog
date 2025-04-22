@@ -10,6 +10,7 @@ import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { CommentsEditor } from "@/app/ui/forms/Editors";
+import { addPost } from "@/lib/actions";
 import PostsOptions from "@/app/ui/PostsOptions";
 import { auth } from "@/auth";
 
@@ -19,6 +20,8 @@ export default async function Page({ params }) {
   const { slug }: { slug: string } = await params;
   const POST = defineQuery(`*[slug.current == '${slug}'][0]`);
   const { data: post }: { data: PostType } = await sanityFetch({ query: POST });
+  // add post to sql db
+  await addPost(post);
 
   // image builder
   const { projectId, dataset } = client.config();

@@ -342,7 +342,9 @@ export async function addPost(post: PostType) {
   const client = await db.connect();
   await client.query(`CREATE TABLE IF NOT EXISTS posts (
     id UUID PRIMARY KEY NOT NULL,
-    slug TEXT NOT NULL
+    slug TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL
   )`);
   // check if there is a post with the same id
   const postExists = await client.query(`SELECT * FROM posts WHERE id = $1`, [
@@ -350,10 +352,10 @@ export async function addPost(post: PostType) {
   ]);
   // if the post does not exist, insert it into the database
   if (!postExists.rows.length) {
-    await client.query(`INSERT INTO posts (id, slug) VALUES ($1, $2)`, [
-      post._id,
-      post.slug.current,
-    ]);
+    await client.query(
+      `INSERT INTO posts (id, slug, title, description) VALUES ($1, $2, $3, $4)`,
+      [post._id, post.slug.current, post.title, post.description]
+    );
   }
 
   client.release();
@@ -422,6 +424,24 @@ export async function isPostLiked(post_id: string, email: string) {
   );
   client.release();
   return likeExists.rows.length ? true : false;
+}
+
+export async function getFeaturedPosts() {
+  const client = await db.connect();
+  // get the featured posts
+  const result =
+    await client.query(`SELECT post_id, posts.slug, posts.title, posts.description, COUNT(DISTINCT user_id) AS likes FROM posts_likes JOIN posts on posts_likes.post_id = posts.id GROUP BY posts_likes.post_id, posts.slug,posts.title, posts.description ORDER BY likes DESC LIMIT 6
+`);
+  const featuredPosts: {
+    post_id: string;
+    slug: string;
+    title: string;
+    description: string;
+    likes: string;
+  }[] = result.rows;
+  // close the connection
+  client.release();
+  return featuredPosts;
 }
 
 // Comments

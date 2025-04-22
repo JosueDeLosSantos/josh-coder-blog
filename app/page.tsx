@@ -6,15 +6,10 @@ import Button from "@/app/ui/Button";
 import { orbitron, oxanium, inter, poppins } from "@/app/ui/fonts";
 import clsx from "clsx";
 import Link from "next/link";
-//sanity
-import { defineQuery } from "next-sanity";
-import { sanityFetch } from "@/sanity/live";
-import { PostType } from "@/app/types";
+import { getFeaturedPosts } from "@/lib/actions";
 
 export default async function Hero() {
-  const ALL_POSTS = defineQuery(`*[_type == "post"]`);
-  const data = await sanityFetch({ query: ALL_POSTS });
-  const posts: PostType[] = data.data;
+  const posts = await getFeaturedPosts();
 
   return (
     <>
@@ -55,10 +50,10 @@ export default async function Hero() {
         </div>
         {/* This section contains Featured Posts */}
         <div className="flex flex-wrap justify-center gap-5 2xl:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 max-md:mt-8 md:mt-10 w-fit mx-auto">
-          {posts.slice(0, 6).map((post) => (
+          {posts.map((post) => (
             <Link
-              key={post._id}
-              href={`/blog/${encodeURIComponent(post.slug.current)}`}
+              key={post.post_id}
+              href={`/blog/${encodeURIComponent(post.slug)}`}
             >
               <div className="flex flex-col gap-2 bg-white max-w-80 h-full min-h-64 p-4 shadow-md rounded-lg cursor-default">
                 <div
