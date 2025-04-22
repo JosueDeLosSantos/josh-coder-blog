@@ -1,10 +1,11 @@
-import { inter, poppins } from "@/app/ui/fonts";
+import { inter, poppins, oxanium } from "@/app/ui/fonts";
 import { DateTime } from "luxon";
 import Button from "@/app/ui/Button";
 import ProfileImage from "@/app/ui/ProfileImage";
 import Link from "next/link";
 import FotoUploader from "@/app/ui/forms/FotoUploader";
 import { auth } from "@/auth";
+import { RiCake2Fill } from "react-icons/ri";
 // postgres
 import { db } from "@vercel/postgres";
 
@@ -36,38 +37,45 @@ export default async function About() {
         <ProfileImage
           session={session}
           alt={name || "user name"}
-          className="absolute bg-white -top-16 left-1/2 transform -translate-x-1/2 rounded-full ring-1 ring-primaryBorder"
+          className="absolute bg-white -top-14 left-1/2 transform -translate-x-1/2 rounded-full ring-1 ring-primaryBorder"
           height={120}
           width={120}
         />
-        <FotoUploader message="Edit profile image" />
+        <FotoUploader message="Profile image" />
 
-        <div className="flex flex-col gap-8 mb-8">
+        <div className="flex flex-col gap-8 pt-4">
           <div>
-            <h1 className={`${poppins.className} text-2xl font-semibold`}>
+            <h1
+              className={`${oxanium.className} text-2xl lg:text-4xl font-semibold`}
+            >
               {name}
             </h1>
           </div>
           {/* bio */}
           <div className={`${inter.className}`}>
             {bio === null || bio === "" ? (
-              <p>You have no biography, edit your profile to be all set!</p>
+              <p className="text-textLight">
+                You have no biography, edit your profile to be all set!
+              </p>
             ) : (
               <div dangerouslySetInnerHTML={{ __html: bio }}></div>
             )}
           </div>
-          {/* Start date */}
-          <div>
-            <span
-              className={`${poppins.className} text-textLight`}
-            >{`Joined on ${date}`}</span>
-          </div>
         </div>
-        <Link href="/auth/blog/profile/edit">
-          <Button disabled={false} layout="form" type="button" bg="secondary">
-            Edit Profile
-          </Button>
-        </Link>
+        <div className="flex flex-col gap-4 mt-12">
+          {/* Start date */}
+          <div className="flex items-center justify-center gap-2 text-sm text-textLight">
+            <RiCake2Fill className="size-5" />
+            <span className={`${poppins.className}`}>
+              {`Joined on ${date}`}
+            </span>
+          </div>
+          <Link href="/auth/blog/profile/edit">
+            <Button disabled={false} layout="form" type="button" bg="secondary">
+              Edit Profile
+            </Button>
+          </Link>
+        </div>
       </div>
     </div>
   );

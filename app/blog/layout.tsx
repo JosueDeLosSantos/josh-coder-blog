@@ -3,7 +3,6 @@ import Logo from "@/app/ui/Logo";
 import MenuOptions from "@/app/ui/MenuOptions";
 import clsx from "clsx";
 import { MdMenu } from "react-icons/md";
-import { GrClose } from "react-icons/gr";
 import { useState } from "react";
 
 export default function BlogLayout({
@@ -36,13 +35,10 @@ export default function BlogLayout({
           }
         )}
       >
-        {/* Menu icon */}
-        <GrClose
-          onClick={() => setOpen(!open)}
-          className="mb-5 ml-auto mr-8 text-xl md:text-2xl 2xl:text-3xl"
-        />
         {/* Sidebar options */}
-        <MenuOptions session={null} vertical={true} />
+        <div className="h-screen" onClick={() => setOpen(!open)}>
+          <MenuOptions session={null} vertical={true} />
+        </div>
       </div>
       <div>
         {/* navbar */}

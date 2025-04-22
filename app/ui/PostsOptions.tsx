@@ -6,7 +6,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { RiHeartAddLine, RiHeartAddFill } from "react-icons/ri";
 import clsx from "clsx";
-import LoginAlert from "./LoginAlert";
+import LoginAlert from "@/app/ui/LoginAlert";
 
 export default function PostsOptions({
   session,

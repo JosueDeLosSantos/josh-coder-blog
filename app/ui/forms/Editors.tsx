@@ -20,6 +20,7 @@ import { BiMessageRounded } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import Link from "next/link";
+import LoginAlert from "@/app/ui/LoginAlert";
 
 export function BioEditor({
   htmlFor,
@@ -75,10 +76,7 @@ export function CommentsEditor({
   value?: string;
   session?: Session | null;
   post_id: string;
-  slug?: {
-    current: string;
-    _type: "slug";
-  };
+  slug: string;
 }) {
   const [text, setText] = useState<string>(value || "");
   const [comments, setComments] = useState<Message[]>([]);
@@ -133,7 +131,7 @@ export function CommentsEditor({
             className={`${poppins.className}`}
           >{`Do you want to leave a comment?`}</span>{" "}
           <Link
-            href={`/login/${slug?.current}`}
+            href={`/login/${slug}`}
             className={`${poppins.className} text-primaryLight cursor-pointer hover:underline`}
           >
             Log in
@@ -186,6 +184,7 @@ export function CommentsEditor({
         post_id={post_id}
         comments={comments}
         session={session}
+        slug={slug}
         dumpComment={dumpComment}
       />
     </div>
@@ -199,15 +198,17 @@ export function ReplyEditor({
   post_id,
   parent_id,
   email,
+  slug,
   handleDelete,
   setCommentToSubmit,
 }: {
   htmlFor: string;
   value?: string;
-  session: Session | null;
+  session?: Session | null;
   post_id: string;
   parent_id: string;
   email: string;
+  slug?: string;
   handleDelete: (id: string) => void;
   setCommentToSubmit: (comment_id: string) => void;
 }) {
@@ -215,6 +216,11 @@ export function ReplyEditor({
   const [editor, setEditor] = useState(false);
   const [likes, setLikes] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
+  const [isLoggedOut, setIsLoggedOut] = useState(false);
+
+  function handleClose() {
+    setIsLoggedOut(!isLoggedOut);
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -238,6 +244,16 @@ export function ReplyEditor({
         setLikes(likes + 1);
         setIsLiked(true);
       }
+    } else {
+      handleClose();
+    }
+  }
+
+  function handleEditor(v: boolean) {
+    if (session?.user?.email) {
+      setEditor(v);
+    } else {
+      handleClose();
     }
   }
 
@@ -246,9 +262,9 @@ export function ReplyEditor({
       if (session?.user?.email) {
         const liked = await isCommentLiked(parent_id, session.user.email);
         setIsLiked(liked);
+        const commentsAmount = await getCommentLikes(parent_id);
+        setLikes(Number(commentsAmount));
       }
-      const commentsAmount = await getCommentLikes(parent_id);
-      setLikes(Number(commentsAmount));
     })();
   }, [parent_id]);
 
@@ -293,7 +309,7 @@ export function ReplyEditor({
             id={`${parent_id}-reply`}
             type="button"
             className="flex items-center gap-2 hover:bg-blogBg px-2 py-1 rounded-md mt-1"
-            onClick={() => setEditor(true)}
+            onClick={() => handleEditor(true)}
           >
             <BiMessageRounded className="text-lg" /> Reply
           </button>
@@ -310,6 +326,9 @@ export function ReplyEditor({
             </button>
           )}
         </div>
+      )}
+      {isLoggedOut && slug && (
+        <LoginAlert slug={slug} handleClose={handleClose} />
       )}
       {session && editor && (
         <form onSubmit={handleSubmit}>

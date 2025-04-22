@@ -214,7 +214,7 @@ const BlogImgUploadBtn: React.FC<ImgUploadBtnProps> = ({
         className={
           isDragging
             ? "block text-textMild max-md:text-sm md:text-base 2xl:text-lg mx-auto"
-            : "block text-textLight max-md:text-sm md:text-base 2xl:text-lg mx-auto"
+            : "block text-primaryLight max-md:text-sm md:text-base 2xl:text-lg mx-auto"
         }
         onClick={(e) => {
           e.preventDefault();
@@ -222,8 +222,8 @@ const BlogImgUploadBtn: React.FC<ImgUploadBtnProps> = ({
         }}
         {...dragProps}
       >
-        <div className="flex items-center">
-          {!loading && <AiOutlineEdit className="text-lg" />}
+        <div className="flex items-center gap-1 hover:underline text-sm">
+          {!loading && <AiOutlineEdit className="size-4" />}
           {loading && <MdAutorenew className="text-lg animate-spin" />}
           {loading && "Uploading..."}
           {!loading && message}

@@ -15,11 +15,13 @@ export default function CommentsThreads({
   post_id,
   comments,
   session,
+  slug,
   dumpComment,
 }: {
   post_id: string;
   comments: Message[];
   session?: Session | null;
+  slug: string;
   dumpComment: (comment_id: string) => void;
 }) {
   const [commentToSubmit, setCommentToSubmit] = useState<string>("");
@@ -56,17 +58,16 @@ export default function CommentsThreads({
               </div>
 
               {/* REPLY EDITOR */}
-              {session && (
-                <ReplyEditor
-                  post_id={post_id}
-                  htmlFor="comment"
-                  session={session}
-                  parent_id={comment.id}
-                  setCommentToSubmit={setCommentToSubmit}
-                  email={comment.email}
-                  handleDelete={dumpComment}
-                />
-              )}
+              <ReplyEditor
+                post_id={post_id}
+                htmlFor="comment"
+                session={session}
+                parent_id={comment.id}
+                setCommentToSubmit={setCommentToSubmit}
+                email={comment.email}
+                slug={slug}
+                handleDelete={dumpComment}
+              />
             </div>
           </div>
 
@@ -75,6 +76,7 @@ export default function CommentsThreads({
             post_id={post_id}
             parent_id={comment.id}
             commentToSubmit={commentToSubmit}
+            slug={slug}
           />
         </div>
       ))}
@@ -87,11 +89,13 @@ function ChildComments({
   post_id,
   parent_id,
   commentToSubmit,
+  slug,
 }: {
   session?: Session | null;
   post_id: string;
   parent_id: string;
   commentToSubmit: string;
+  slug: string;
 }) {
   const [childComments, setChildComments] = useState<Message[]>([]);
   const [commentToDelete, setCommentToDelete] = useState<string>("");
@@ -193,6 +197,18 @@ function ChildComments({
                       setCommentToSubmit={setChildCommentToSubmit}
                     />
                   )}
+                  {!session && (
+                    <ReplyEditor
+                      post_id={post_id}
+                      htmlFor="comment"
+                      session={session}
+                      parent_id={comment.id}
+                      email={comment.email}
+                      slug={slug}
+                      handleDelete={deleteChildComment}
+                      setCommentToSubmit={setChildCommentToSubmit}
+                    />
+                  )}
                 </div>
               </div>
 
@@ -201,6 +217,7 @@ function ChildComments({
                 post_id={post_id}
                 parent_id={comment.id}
                 commentToSubmit={childCommentToSubmit}
+                slug={slug}
               />
             </div>
           ))}

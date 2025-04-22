@@ -3,7 +3,6 @@ import Logo from "@/app/ui/Logo";
 import MenuOptions from "@/app/ui/MenuOptions";
 import clsx from "clsx";
 import { MdMenu } from "react-icons/md";
-import { GrClose } from "react-icons/gr";
 import { FaRegUser } from "react-icons/fa6";
 import { RxExit } from "react-icons/rx";
 import { useState, useEffect } from "react";
@@ -11,6 +10,7 @@ import { logout } from "@/lib/actions";
 import { Session } from "next-auth";
 import { poppins } from "@/app/ui/fonts";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function AuthLayout({
   children,
@@ -22,11 +22,13 @@ export default function AuthLayout({
   const [open, setOpen] = useState(false);
   const [isAuth, setIsAuth] = useState(true);
   const [submenu, setSubmenu] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (isAuth === false) {
       (async function logoutUser(): Promise<void> {
-        await logout();
+        const slug = pathname.split("/");
+        await logout(slug[slug.length - 1]);
       })();
     }
   }, [isAuth]);
@@ -56,19 +58,20 @@ export default function AuthLayout({
       {/* Small screens sidebar */}
       <div
         className={clsx(
-          "fixed w-1/2 top-[76px] right-0 h-[calc(100vh-76px)] bg-white z-20 px-2 py-8",
+          "fixed w-1/2 top-[76px] right-0 h-[calc(100vh-76px)] bg-white z-20 py-8",
           {
             hidden: !open,
           }
         )}
       >
-        {/* Menu icon */}
-        <GrClose
-          onClick={() => setOpen(!open)}
-          className="mb-5 ml-auto mr-8 text-xl md:text-2xl 2xl:text-3xl"
-        />
         {/* Sidebar options */}
-        <MenuOptions session={session} vertical={true} setIsAuth={setIsAuth} />
+        <div className="h-screen" onClick={() => setOpen(!open)}>
+          <MenuOptions
+            session={session}
+            vertical={true}
+            setIsAuth={setIsAuth}
+          />
+        </div>
       </div>
       <div>
         {/* navbar */}
@@ -112,9 +115,7 @@ export default function AuthLayout({
                 <span className="truncate font-semibold">
                   {session?.user?.name}
                 </span>
-                <div className="truncate text-sm">
-                  {session?.user?.email || "no email found"}
-                </div>
+                <div className="truncate text-sm">{session?.user?.email}</div>
               </div>
               <FaRegUser className="size-8" />
             </div>

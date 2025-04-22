@@ -219,8 +219,24 @@ export async function authenticate(
   }
 }
 
-export async function logout() {
-  await signOut({ redirectTo: "/blog" });
+export async function logout(v: string) {
+  switch (v) {
+    case "blog":
+      await signOut({ redirectTo: "/blog" });
+      break;
+    case "profile":
+      await signOut({ redirectTo: "/blog" });
+      break;
+    case "edit":
+      await signOut({ redirectTo: "/blog" });
+      break;
+    case "password":
+      await signOut({ redirectTo: "/blog" });
+      break;
+    default:
+      await signOut({ redirectTo: `/blog/${v}` });
+      break;
+  }
 }
 
 // Upload file using standard upload
