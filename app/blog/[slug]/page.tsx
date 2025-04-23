@@ -96,47 +96,49 @@ export default async function Page({ params }) {
 
   return (
     <div className="w-full">
-      <PostsOptions session={session} post_id={post._id} slug={slug} />
-      <div className="bg-white max-w-4xl py-4 rounded-lg cursor-default mx-auto mt-24">
-        <div className="flex flex-col gap-4 lg:gap-5 px-4 md:px-16">
-          <div
-            className={`${poppins.className} text-text font-semibold text-3xl md:text-4xl`}
-          >
-            <h1>{post.title}</h1>
+      <div className="lg:flex lg:gap-16 lg:justify-center">
+        <PostsOptions session={session} post_id={post._id} slug={slug} />
+        <div className="bg-white max-w-4xl py-4 rounded-lg cursor-default mt-24">
+          <div className="flex flex-col gap-4 lg:gap-5 px-4 md:px-16">
+            <div
+              className={`${poppins.className} text-text font-semibold text-3xl md:text-4xl`}
+            >
+              <h1>{post.title}</h1>
+            </div>
+            <div
+              className={clsx(
+                poppins.className,
+                "text-sm md:text-base text-textLight"
+              )}
+            >
+              {DateTime.fromISO(post._createdAt).toLocaleString({
+                month: "long",
+                day: "numeric",
+                year: "numeric",
+              })}
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {post.tag &&
+                post.tag.length &&
+                post.tag.map((name) => (
+                  <div
+                    key={name + post._id}
+                    className="text-primaryLight border border-primaryLight text-sm md:text-base px-2 py-0.5 rounded"
+                  >
+                    {name}
+                  </div>
+                ))}
+            </div>
           </div>
           <div
-            className={clsx(
-              poppins.className,
-              "text-sm md:text-base text-textLight"
-            )}
+            className={`${inter.className} text-left mt-10 px-4 md:px-16 text-lg`}
           >
-            {DateTime.fromISO(post._createdAt).toLocaleString({
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
+            <PortableText value={post.body} components={components} />
           </div>
-          <div className="flex flex-wrap gap-2">
-            {post.tag &&
-              post.tag.length &&
-              post.tag.map((name) => (
-                <div
-                  key={name + post._id}
-                  className="text-primaryLight border border-primaryLight text-sm md:text-base px-2 py-0.5 rounded"
-                >
-                  {name}
-                </div>
-              ))}
-          </div>
-        </div>
-        <div
-          className={`${inter.className} text-left mt-10 px-4 md:px-16 text-lg`}
-        >
-          <PortableText value={post.body} components={components} />
-        </div>
-        {/* Comments */}
+          {/* Comments */}
 
-        <CommentsEditor htmlFor="comment" post_id={post._id} slug={slug} />
+          <CommentsEditor htmlFor="comment" post_id={post._id} slug={slug} />
+        </div>
       </div>
     </div>
   );

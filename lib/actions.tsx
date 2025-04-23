@@ -344,6 +344,7 @@ export async function addPost(post: PostType) {
     id UUID PRIMARY KEY NOT NULL,
     slug TEXT NOT NULL,
     title TEXT NOT NULL,
+    tags TEXT[] NOT NULL,
     description TEXT NOT NULL
   )`);
   // check if there is a post with the same id
@@ -353,13 +354,15 @@ export async function addPost(post: PostType) {
   // if the post does not exist, insert it into the database
   if (!postExists.rows.length) {
     await client.query(
-      `INSERT INTO posts (id, slug, title, description) VALUES ($1, $2, $3, $4)`,
-      [post._id, post.slug.current, post.title, post.description]
+      `INSERT INTO posts (id, slug, title, description, tags) VALUES ($1, $2, $3, $4, $5)`,
+      [post._id, post.slug.current, post.title, post.description, post.tag]
     );
   }
 
   client.release();
 }
+
+// Posts likes
 
 export async function likePost(post_id: string, email: string) {
   const client = await db.connect();
@@ -376,19 +379,19 @@ export async function likePost(post_id: string, email: string) {
     );
   `);
 
-  // check if the user has already liked the comment
+  // check if the user has already liked the post
   const likeExists = await client.query(
     `SELECT * FROM posts_likes WHERE user_id = $1 AND post_id = $2`,
     [user.rows[0].id, post_id]
   );
-  // if the user has not liked the comment, insert the like into the database
+  // if the user has not liked the post, insert the like into the database
   if (!likeExists.rows.length) {
     await client.query(
       `INSERT INTO posts_likes (user_id, post_id) VALUES ($1, $2)`,
       [user.rows[0].id, post_id]
     );
   } else {
-    // if the user has liked the comment, delete the like from the database
+    // if the user has liked the post, delete the like from the database
     await client.query(
       `DELETE FROM posts_likes WHERE user_id = $1 AND post_id = $2`,
       [user.rows[0].id, post_id]
@@ -442,6 +445,87 @@ export async function getFeaturedPosts() {
   // close the connection
   client.release();
   return featuredPosts;
+}
+
+// Posts bookmarks
+
+export async function savePost(post_id: string, email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  await client.query(`
+    CREATE TABLE IF NOT EXISTS saved_posts (
+      user_id UUID NOT NULL,
+      post_id UUID NOT NULL,
+      PRIMARY KEY (user_id, post_id),
+      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+      CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
+    );
+  `);
+
+  // check if the user has already saved the post
+  const bookmarkExists = await client.query(
+    `SELECT * FROM saved_posts WHERE user_id = $1 AND post_id = $2`,
+    [user.rows[0].id, post_id]
+  );
+  // if the user has not bookmarked the post, insert the bookmark into the database
+  if (!bookmarkExists.rows.length) {
+    await client.query(
+      `INSERT INTO saved_posts (user_id, post_id) VALUES ($1, $2)`,
+      [user.rows[0].id, post_id]
+    );
+  } else {
+    // if the user has bookmarked the post, delete the bookmark from the database
+    await client.query(
+      `DELETE FROM saved_posts WHERE user_id = $1 AND post_id = $2`,
+      [user.rows[0].id, post_id]
+    );
+  }
+
+  client.release();
+  return bookmarkExists.rows.length ? true : false;
+}
+
+export async function getPostBookmarks(post_id: string) {
+  const client = await db.connect();
+  // get the number of bookmarks for the post
+  const result = await client.query(
+    `SELECT COUNT(*) AS bookmarks FROM saved_posts WHERE post_id = $1`,
+    [post_id]
+  );
+  const bookmarks: string = result.rows[0].bookmarks;
+  // close the connection
+  client.release();
+  return bookmarks;
+}
+
+export async function isPostBookmarked(post_id: string, email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  // check if the user has already bookmarked the post
+  const bookmarkExists = await client.query(
+    `SELECT * FROM saved_posts WHERE user_id = $1 AND post_id = $2`,
+    [user.rows[0].id, post_id]
+  );
+  client.release();
+  return bookmarkExists.rows.length ? true : false;
+}
+
+export async function readingList(email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  const bookmarks = await client.query(
+    `SELECT COUNT(*) AS bookmarks FROM saved_posts WHERE user_id = $1`,
+    [user.rows[0].id]
+  );
+  client.release();
+  const result: string = bookmarks.rows[0].bookmarks;
+  return result;
 }
 
 // Comments

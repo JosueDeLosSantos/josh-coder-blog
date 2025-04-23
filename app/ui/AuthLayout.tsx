@@ -120,6 +120,8 @@ export default function AuthLayout({
               <FaRegUser className="size-8" />
             </div>
           </Link>
+          {/* Reading list */}
+
           {/* Sign out */}
           <div
             onClick={() => setIsAuth(false)}
