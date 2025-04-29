@@ -262,11 +262,11 @@ export function ReplyEditor({
       if (session?.user?.email) {
         const liked = await isCommentLiked(parent_id, session.user.email);
         setIsLiked(liked);
-        const commentsAmount = await getCommentLikes(parent_id);
-        setLikes(Number(commentsAmount));
       }
+      const commentsAmount = await getCommentLikes(parent_id);
+      setLikes(Number(commentsAmount));
     })();
-  }, [parent_id]);
+  }, [parent_id, session?.user?.email]);
 
   const renderHeader = () => {
     return (

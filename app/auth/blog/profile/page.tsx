@@ -6,6 +6,7 @@ import Link from "next/link";
 import FotoUploader from "@/app/ui/forms/FotoUploader";
 import { auth } from "@/auth";
 import { RiCake2Fill } from "react-icons/ri";
+import { readingListCount } from "@/lib/actions";
 // postgres
 import { db } from "@vercel/postgres";
 
@@ -30,6 +31,10 @@ export default async function About() {
     day: "numeric",
     year: "numeric",
   });
+
+  const readingListData = session?.user?.email
+    ? await readingListCount(session.user.email)
+    : "";
 
   return (
     <div className="flex flex-col min-h-screen max-sm:px-2 sm:px-6 pb-8 pt-48 md:px-20 2xl:px-40">
@@ -60,6 +65,15 @@ export default async function About() {
             ) : (
               <div dangerouslySetInnerHTML={{ __html: bio }}></div>
             )}
+          </div>
+          <div>
+            <Link href="/auth/blog/bookmarks">
+              <div className="text-sm text-textLight hover:underline cursor-pointer">
+                <span
+                  className={`${poppins.className}`}
+                >{`Reading list (${readingListData})`}</span>
+              </div>
+            </Link>
           </div>
         </div>
         <div className="flex flex-col gap-4 mt-12">

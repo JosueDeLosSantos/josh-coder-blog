@@ -31,7 +31,7 @@ export default function AuthLayout({
         await logout(slug[slug.length - 1]);
       })();
     }
-  }, [isAuth]);
+  }, [isAuth, pathname]);
 
   function openSubMenu() {
     setSubmenu(!submenu);

@@ -82,7 +82,7 @@ export default function PostsOptions({
       const bookmarksAmount = await getPostBookmarks(post_id);
       setBookmarks(Number(bookmarksAmount));
     })();
-  }, [post_id]);
+  }, [post_id, session?.user?.email]);
 
   return (
     <div className="lg:relative">

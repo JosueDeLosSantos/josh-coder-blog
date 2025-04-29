@@ -40,22 +40,7 @@ export async function signup(prevState: FormState, formData: FormData) {
   // e.g. Hash the user's password before storing it
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // call the db to create the user
   const client = await db.connect();
-  // creates a user's table if it does not exist
-  await client.query(
-    `CREATE TABLE IF NOT EXISTS users (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      name VARCHAR(255) NOT NULL,
-      firstname VARCHAR(255) NOT NULL,
-      surname VARCHAR(255) NOT NULL,
-      email VARCHAR(255) NOT NULL,
-      password VARCHAR(255) NOT NULL,
-      bio TEXT NULL,
-      image TEXT,
-      created_at DATE NOT NULL DEFAULT CURRENT_DATE
-    )`
-  );
   // check if there is a user with the same email
   const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
     email,
@@ -340,13 +325,7 @@ export async function deleteFileAuto() {
 
 export async function addPost(post: PostType) {
   const client = await db.connect();
-  await client.query(`CREATE TABLE IF NOT EXISTS posts (
-    id UUID PRIMARY KEY NOT NULL,
-    slug TEXT NOT NULL,
-    title TEXT NOT NULL,
-    tags TEXT[] NOT NULL,
-    description TEXT NOT NULL
-  )`);
+
   // check if there is a post with the same id
   const postExists = await client.query(`SELECT * FROM posts WHERE id = $1`, [
     post._id,
@@ -369,15 +348,6 @@ export async function likePost(post_id: string, email: string) {
   const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
     email,
   ]);
-  await client.query(`
-    CREATE TABLE IF NOT EXISTS posts_likes (
-      user_id UUID NOT NULL,
-      post_id UUID NOT NULL,
-      PRIMARY KEY (user_id, post_id),
-      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
-    );
-  `);
 
   // check if the user has already liked the post
   const likeExists = await client.query(
@@ -454,15 +424,6 @@ export async function savePost(post_id: string, email: string) {
   const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
     email,
   ]);
-  await client.query(`
-    CREATE TABLE IF NOT EXISTS saved_posts (
-      user_id UUID NOT NULL,
-      post_id UUID NOT NULL,
-      PRIMARY KEY (user_id, post_id),
-      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE
-    );
-  `);
 
   // check if the user has already saved the post
   const bookmarkExists = await client.query(
@@ -520,6 +481,28 @@ export async function readingList(email: string) {
     email,
   ]);
   const bookmarks = await client.query(
+    `SELECT created_at, posts.slug, posts.title, posts.description, posts.tags FROM saved_posts JOIN posts ON post_id = posts.id WHERE user_id = $1 ORDER BY created_at DESC`,
+    [user.rows[0].id]
+  );
+  client.release();
+
+  const result: {
+    created_at: Date;
+    description: string;
+    slug: string;
+    title: string;
+    tags: string[];
+  }[] = bookmarks.rows;
+
+  return result;
+}
+
+export async function readingListCount(email: string) {
+  const client = await db.connect();
+  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+    email,
+  ]);
+  const bookmarks = await client.query(
     `SELECT COUNT(*) AS bookmarks FROM saved_posts WHERE user_id = $1`,
     [user.rows[0].id]
   );
@@ -539,22 +522,6 @@ export async function submitComment(FormData: FormData) {
   const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
     email,
   ]);
-
-  // creates a user's table if it does not exist
-  await client.query(
-    `CREATE TABLE IF NOT EXISTS comments (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      message TEXT NOT NULL,
-      created_at TIMESTAMPTZ DEFAULT now(),
-      updated_at TIMESTAMPTZ DEFAULT now(),
-      user_id UUID NOT NULL,
-      post_id UUID NOT NULL,
-      parent_id UUID NULL,
-      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      CONSTRAINT fk_post FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
-      CONSTRAINT fk_parent FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
-    )`
-  );
 
   if (parent_id === null || parent_id === undefined) {
     await client.query(
@@ -613,15 +580,6 @@ export async function likeComment(comment_id: string, email: string) {
   const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
     email,
   ]);
-  await client.query(`
-    CREATE TABLE IF NOT EXISTS comments_likes (
-      user_id UUID NOT NULL,
-      comment_id UUID NOT NULL,
-      PRIMARY KEY (user_id, comment_id),
-      CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-      CONSTRAINT fk_comment FOREIGN KEY (comment_id) REFERENCES comments(id) ON DELETE CASCADE
-    );
-  `);
 
   // check if the user has already liked the comment
   const likeExists = await client.query(

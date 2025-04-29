@@ -39,14 +39,16 @@ export default async function Hero() {
               Read Now
             </Button>
           </Link>
-          <div
-            className={clsx(
-              oxanium.className,
-              "max-md:text-2xl md:text-3xl 2xl:text-4xl text-text"
-            )}
-          >
-            <h3>Featured Posts</h3>
-          </div>
+          {posts.length > 0 && (
+            <div
+              className={clsx(
+                oxanium.className,
+                "max-md:text-2xl md:text-3xl 2xl:text-4xl text-text"
+              )}
+            >
+              <h3>Featured Posts</h3>
+            </div>
+          )}
         </div>
         {/* This section contains Featured Posts */}
         <div className="flex flex-wrap justify-center gap-5 2xl:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 max-md:mt-8 md:mt-10 w-fit mx-auto">

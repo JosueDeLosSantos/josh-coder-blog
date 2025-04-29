@@ -31,7 +31,7 @@ export default function ProfileImage({
         if (image) setImageUrl(image);
       }
     })();
-  }, []);
+  }, [session, userImage]);
   return (
     <Image
       src={imageUrl}
