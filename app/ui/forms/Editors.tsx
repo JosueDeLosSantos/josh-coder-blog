@@ -119,7 +119,7 @@ export function CommentsEditor({
   const header = renderHeader();
 
   return (
-    <div className="flex flex-col gap-14 mt-10 border-t border-blogBg py-8 px-4 md:px-16">
+    <div className="flex flex-col gap-14 mt-10 border-t border-blogBg pt-8 pb-16 px-4 md:px-16">
       <h2
         className={`${poppins.className} text-text font-semibold text-3xl md:text-4xl`}
       >
