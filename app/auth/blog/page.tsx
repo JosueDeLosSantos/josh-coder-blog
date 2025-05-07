@@ -1,7 +1,6 @@
 import SearchBar from "@/app/ui/Search";
 import Tags from "@/app/ui/Tags";
 import PostsList from "@/app/ui/PostsList";
-import { Suspense } from "react";
 import ScrollUp from "@/app/ui/ScrollUp";
 import { defineQuery } from "next-sanity";
 import { sanityFetch } from "@/sanity/live";
@@ -27,9 +26,7 @@ export default async function Home(props: {
         {/* Search bar */}
         <SearchBar placeholder="Search by title" />
         <Tags />
-        <Suspense fallback={<div>Loading...</div>}>
-          <PostsList data={posts} query={query} tag={tag} />
-        </Suspense>
+        <PostsList data={posts} query={query} tag={tag} />
         <ScrollUp />
       </div>
     </div>

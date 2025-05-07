@@ -7,6 +7,7 @@ import {
   savePost,
   getPostBookmarks,
   isPostBookmarked,
+  commentsCount,
 } from "@/lib/actions";
 import { Session } from "next-auth";
 import React from "react";
@@ -17,6 +18,7 @@ import {
   RiBookmarkFill,
   RiBookmarkLine,
 } from "react-icons/ri";
+import { MdOutlineModeComment } from "react-icons/md";
 import clsx from "clsx";
 import LoginAlert from "@/app/ui/LoginAlert";
 
@@ -31,6 +33,7 @@ export default function PostsOptions({
 }) {
   const [likes, setLikes] = useState(0);
   const [bookmarks, setBookmarks] = useState(0);
+  const [comments, setComments] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [isLoggedOut, setIsLoggedOut] = useState(false);
@@ -69,6 +72,13 @@ export default function PostsOptions({
     }
   }
 
+  function handleComments() {
+    const commentSection = document.getElementById("comments-section");
+    if (commentSection) {
+      commentSection.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+
   useEffect(() => {
     (async () => {
       if (session?.user?.email) {
@@ -81,6 +91,8 @@ export default function PostsOptions({
       setLikes(Number(likesAmount));
       const bookmarksAmount = await getPostBookmarks(post_id);
       setBookmarks(Number(bookmarksAmount));
+      const commentsAmount = await commentsCount(post_id);
+      setComments(Number(commentsAmount));
     })();
   }, [post_id, session?.user?.email]);
 
@@ -125,6 +137,22 @@ export default function PostsOptions({
             )}
           >
             <span>{bookmarks}</span>
+          </div>
+        </div>
+        {/* COMMENTS */}
+        <div className="flex max-lg:gap-1 lg:flex-col">
+          <button onClick={() => handleComments()}>
+            <MdOutlineModeComment className="size-6 text-textMild hover:text-primaryLight" />
+          </button>
+          <div
+            className={clsx(
+              "text-textMild text-sm flex justify-center max-lg:items-end",
+              {
+                "opacity-0": comments === 0,
+              }
+            )}
+          >
+            <span>{comments}</span>
           </div>
         </div>
       </div>

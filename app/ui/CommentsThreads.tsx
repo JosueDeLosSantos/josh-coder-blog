@@ -27,7 +27,7 @@ export default function CommentsThreads({
   const [commentToSubmit, setCommentToSubmit] = useState<string>("");
 
   return (
-    <div>
+    <div id="comments-section">
       {comments.map((comment) => (
         <div key={`${comment.id}-parent`} className="relative">
           <div className="flex gap-4 bg-white rounded-md py-4">

@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { MdMenu } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { RxExit } from "react-icons/rx";
+import { MdOutlineBookmarks } from "react-icons/md";
 import { useState, useEffect } from "react";
 import { logout } from "@/lib/actions";
 import { Session } from "next-auth";
@@ -102,9 +103,9 @@ export default function AuthLayout({
         <div
           className={clsx(
             poppins.className,
-            "fixed transition duration-500 -top-20 right-10 flex flex-col py-4 z-40 bg-white drop-shadow w-72",
+            "fixed transition duration-500 -top-28 right-10 flex flex-col py-4 z-40 bg-white drop-shadow w-72",
             {
-              "transition duration-500 translate-y-40": submenu,
+              "transition duration-500 translate-y-48": submenu,
             }
           )}
         >
@@ -121,6 +122,13 @@ export default function AuthLayout({
             </div>
           </Link>
           {/* Reading list */}
+
+          <Link href="/auth/blog/bookmarks" onClick={() => openSubMenu()}>
+            <div className="flex justify-between cursor-pointer px-4 py-2 items-center hover:bg-textLight hover:text-white text-textLight">
+              <div className="cursor-pointer">Reading list</div>
+              <MdOutlineBookmarks className="size-8" />
+            </div>
+          </Link>
 
           {/* Sign out */}
           <div

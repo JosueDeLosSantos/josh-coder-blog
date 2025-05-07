@@ -3,7 +3,7 @@
 
 ## 🚀 Introduction
 
-Welcome to **Josh Coder**, a sleek, fully responsive **Next.js** blog crafted to share insightful content on **computer science and programming**. This project blends thoughtful UI/UX from [my custom **Figma design system**](https://www.figma.com/design/DuUW9np74Jp1SGHxKcy3Gf/Blog?node-id=59-1113) with powerful backend tech for a seamless and modern reading experience.
+Welcome to **Josh Coder**, a sleek, fully responsive **Next.js** blog crafted to share insightful content on **computer science and programming**. This project blends thoughtful UI/UX from my custom [**Figma design system**](https://www.figma.com/design/DuUW9np74Jp1SGHxKcy3Gf/Blog?node-id=59-1113) with powerful backend tech for a seamless and modern reading experience.
 
 ![README-beta-image.jpg](/public/README-beta-image.jpg)
 

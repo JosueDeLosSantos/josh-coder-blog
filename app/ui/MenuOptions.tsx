@@ -89,6 +89,28 @@ export default function MenubarOptions({
         </Link>
       </li>
 
+      {session && vertical && (
+        <li className={clsx({ "pl-2": vertical })}>
+          <Link href="/auth/blog/bookmarks" className="flex gap-1">
+            <span
+              className={clsx("text-secondary", {
+                "opacity-0": pathname !== "/auth/blog/bookmarks",
+              })}
+            >
+              {"{"}
+            </span>
+            Reading list
+            <span
+              className={clsx("text-secondary", {
+                "opacity-0": pathname !== "/auth/blog/bookmarks",
+              })}
+            >
+              {"}"}
+            </span>
+          </Link>
+        </li>
+      )}
+
       <li className={clsx({ "pl-2": vertical })}>
         <Link href={blogAbout} className="flex gap-1">
           <span

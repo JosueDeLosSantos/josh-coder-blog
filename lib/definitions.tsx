@@ -86,3 +86,11 @@ export type Message = {
   email: string;
   image: string;
 };
+
+export type ReadingListType = {
+  created_at: Date;
+  description: string;
+  slug: string;
+  title: string;
+  tags: string[];
+};

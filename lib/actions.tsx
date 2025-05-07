@@ -13,7 +13,7 @@ import bcrypt from "bcryptjs";
 import { db } from "@vercel/postgres";
 import { createClient } from "@supabase/supabase-js";
 import { PostType } from "@/app/types";
-import { Message } from "@/lib/definitions";
+import { Message, ReadingListType } from "@/lib/definitions";
 
 const supabase = createClient(
   process.env.SUPABASE_PROJECT_URL as string,
@@ -170,16 +170,31 @@ export async function updateProfile(prevState: FormState, formData: FormData) {
     };
     // if the email is the same as the session email
   } else {
-    // update the user's profile in the database
-    await client.query(
-      `UPDATE users SET name = $1, firstname = $2, surname = $3, bio = $4 WHERE email = $5`,
-      [`${firstName} ${surname}`, firstName, surname, bio, email]
-    );
-    client.release();
+    if (
+      firstName === user.rows[0].firstname &&
+      surname === user.rows[0].surname
+    ) {
+      // update the user's profile in the database
+      await client.query(`UPDATE users SET bio = $1 WHERE email = $2`, [
+        bio,
+        email,
+      ]);
+      client.release();
 
-    await signOut();
-    // Redirect the user to the sign in page
-    redirect("/login");
+      // Redirect the user to the sign in page
+      redirect("/auth/blog/profile");
+    } else {
+      // update the user's profile in the database
+      await client.query(
+        `UPDATE users SET name = $1, firstname = $2, surname = $3, bio = $4 WHERE email = $5`,
+        [`${firstName} ${surname}`, firstName, surname, bio, email]
+      );
+      client.release();
+
+      await signOut();
+      // Redirect the user to the sign in page
+      redirect("/login");
+    }
   }
 }
 
@@ -216,6 +231,9 @@ export async function logout(v: string) {
       await signOut({ redirectTo: "/blog" });
       break;
     case "password":
+      await signOut({ redirectTo: "/blog" });
+      break;
+    case "bookmarks":
       await signOut({ redirectTo: "/blog" });
       break;
     default:
@@ -475,26 +493,25 @@ export async function isPostBookmarked(post_id: string, email: string) {
   return bookmarkExists.rows.length ? true : false;
 }
 
-export async function readingList(email: string) {
+export async function readingList(session: Session | null) {
+  const email = session?.user?.email;
   const client = await db.connect();
-  const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
-    email,
-  ]);
-  const bookmarks = await client.query(
-    `SELECT created_at, posts.slug, posts.title, posts.description, posts.tags FROM saved_posts JOIN posts ON post_id = posts.id WHERE user_id = $1 ORDER BY created_at DESC`,
-    [user.rows[0].id]
-  );
-  client.release();
+  if (email) {
+    const user = await client.query(`SELECT * FROM users WHERE email = $1`, [
+      email,
+    ]);
+    const bookmarks = await client.query(
+      `SELECT created_at, posts.slug, posts.title, posts.description, posts.tags FROM saved_posts JOIN posts ON post_id = posts.id WHERE user_id = $1 ORDER BY created_at DESC`,
+      [user.rows[0].id]
+    );
+    client.release();
 
-  const result: {
-    created_at: Date;
-    description: string;
-    slug: string;
-    title: string;
-    tags: string[];
-  }[] = bookmarks.rows;
+    const result: ReadingListType[] = bookmarks.rows;
 
-  return result;
+    return result;
+  } else {
+    return [];
+  }
 }
 
 export async function readingListCount(email: string) {
@@ -629,4 +646,17 @@ export async function isCommentLiked(comment_id: string, email: string) {
   );
   client.release();
   return likeExists.rows.length ? true : false;
+}
+
+export async function commentsCount(post_id: string) {
+  const client = await db.connect();
+  // get the number of comments for the post
+  const result = await client.query(
+    `SELECT COUNT(*) AS comments FROM comments WHERE post_id = $1`,
+    [post_id]
+  );
+  const comments: string = result.rows[0].comments;
+  // close the connection
+  client.release();
+  return comments;
 }
