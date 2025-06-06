@@ -1,5 +1,5 @@
 import { PostType } from "@/app/types";
-import { Tag } from "@/app/ui/Tag";
+import { Tag, TagSkeleton } from "@/app/ui/Tag";
 import { ReadingListType } from "@/lib/definitions";
 //sanity
 import { defineQuery } from "next-sanity";
@@ -73,6 +73,16 @@ export async function BookMarkedTags({
       {tags.map((tag: { name: string; amount: number }) => {
         return <Tag key={tag.name} name={tag.name} amount={tag.amount} />;
       })}
+    </div>
+  );
+}
+
+export async function TagsSkeleton() {
+  return (
+    <div className="flex flex-wrap gap-2 mt-2">
+      {[...Array(8)].map((_, i) => (
+        <TagSkeleton key={i} />
+      ))}
     </div>
   );
 }

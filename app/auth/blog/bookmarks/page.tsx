@@ -4,6 +4,7 @@ import { readingList } from "@/lib/actions";
 import { BookMarkedTags } from "@/app/ui/Tags";
 import { BookmarkedPosts } from "@/app/ui/PostsList";
 import SearchBar from "@/app/ui/Search";
+import ScrollUp from "@/app/ui/ScrollUp";
 
 export default async function Bookmarks(props: {
   searchParams?: Promise<{
@@ -17,8 +18,6 @@ export default async function Bookmarks(props: {
   const session = await auth();
   const readingListData = await readingList(session);
 
-  console.log("readingListData", readingListData);
-
   return (
     <div className="flex flex-col min-h-screen w-full px-8 py-8 md:px-20 2xl:px-40 mt-20">
       <div className="w-full max-w-4xl mx-auto">
@@ -30,6 +29,7 @@ export default async function Bookmarks(props: {
         <SearchBar placeholder="Search by title" />
         <BookMarkedTags readingList={readingListData} />
         <BookmarkedPosts data={readingListData} query={query} tag={tag} />
+        <ScrollUp />
       </div>
     </div>
   );

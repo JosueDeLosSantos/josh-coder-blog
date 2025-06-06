@@ -1,6 +1,6 @@
 import SearchBar from "@/app/ui/Search";
-import Tags from "@/app/ui/Tags";
-import PostsList from "@/app/ui/PostsList";
+import Tags, { TagsSkeleton } from "@/app/ui/Tags";
+import { PostsList, PostsListSkeleton } from "@/app/ui/PostsList";
 import { Suspense } from "react";
 import ScrollUp from "../ui/ScrollUp";
 import { defineQuery } from "next-sanity";
@@ -26,8 +26,10 @@ export default async function Home(props: {
       <div className="w-full max-w-4xl mx-auto">
         {/* Search bar */}
         <SearchBar placeholder="Search by title" />
-        <Tags />
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<TagsSkeleton />}>
+          <Tags />
+        </Suspense>
+        <Suspense fallback={<PostsListSkeleton />}>
           <PostsList data={posts} query={query} tag={tag} />
         </Suspense>
         <ScrollUp />

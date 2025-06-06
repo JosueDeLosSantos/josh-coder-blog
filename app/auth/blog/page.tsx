@@ -1,9 +1,10 @@
 import SearchBar from "@/app/ui/Search";
-import Tags from "@/app/ui/Tags";
-import PostsList from "@/app/ui/PostsList";
+import Tags, { TagsSkeleton } from "@/app/ui/Tags";
+import { PostsList, PostsListSkeleton } from "@/app/ui/PostsList";
 import ScrollUp from "@/app/ui/ScrollUp";
 import { defineQuery } from "next-sanity";
 import { sanityFetch } from "@/sanity/live";
+import { Suspense } from "react";
 
 export default async function Home(props: {
   searchParams?: Promise<{
@@ -25,8 +26,12 @@ export default async function Home(props: {
       <div className="w-full max-w-4xl mx-auto">
         {/* Search bar */}
         <SearchBar placeholder="Search by title" />
-        <Tags />
-        <PostsList data={posts} query={query} tag={tag} />
+        <Suspense fallback={<TagsSkeleton />}>
+          <Tags />
+        </Suspense>
+        <Suspense fallback={<PostsListSkeleton />}>
+          <PostsList data={posts} query={query} tag={tag} />
+        </Suspense>
         <ScrollUp />
       </div>
     </div>

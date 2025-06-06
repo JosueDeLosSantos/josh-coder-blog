@@ -39,3 +39,17 @@ export function Tag({ name, amount }: { name: string; amount: number }) {
     </div>
   );
 }
+
+export function TagSkeleton() {
+  return (
+    <div className="flex cursor-pointer animate-pulse">
+      <div
+        className={clsx(
+          poppins.className,
+          "bg-white h-8 w-16 max-sm:text-sm border border-primaryLight px-2 py-0.5 rounded-l-sm opacity-50"
+        )}
+      />
+      <div className="bg-primaryLight h-8 w-7 rounded-r-sm opacity-50" />
+    </div>
+  );
+}

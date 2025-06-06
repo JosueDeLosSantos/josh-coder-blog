@@ -3,14 +3,13 @@ import heroImageOne from "@/public/hero-image-one.png";
 import heroImageTwo from "@/public/hero-image-two.png";
 import Logo from "@/app/ui/Logo";
 import Button from "@/app/ui/Button";
-import { orbitron, oxanium, inter, poppins } from "@/app/ui/fonts";
+import { orbitron, oxanium } from "@/app/ui/fonts";
 import clsx from "clsx";
 import Link from "next/link";
-import { getFeaturedPosts } from "@/lib/actions";
+import { FeaturedPosts, FeaturedPostsSkeleton } from "@/app/ui/FeaturedPosts";
+import { Suspense } from "react";
 
 export default async function Hero() {
-  const posts = await getFeaturedPosts();
-
   return (
     <>
       <div className="fixed min-h-screen w-full blog-hero-bg h-screen -z-50"></div>
@@ -39,42 +38,20 @@ export default async function Hero() {
               Read Now
             </Button>
           </Link>
-          {posts.length > 0 && (
-            <div
-              className={clsx(
-                oxanium.className,
-                "max-md:text-2xl md:text-3xl 2xl:text-4xl text-text"
-              )}
-            >
-              <h3>Featured Posts</h3>
-            </div>
-          )}
+          <div
+            className={clsx(
+              oxanium.className,
+              "max-md:text-2xl md:text-3xl 2xl:text-4xl text-text"
+            )}
+          >
+            <h3>Featured Posts</h3>
+          </div>
         </div>
         {/* This section contains Featured Posts */}
-        <div className="flex flex-wrap justify-center gap-5 2xl:gap-6 sm:grid sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 max-md:mt-8 md:mt-10 w-fit mx-auto">
-          {posts.map((post) => (
-            <Link
-              key={post.post_id}
-              href={`/blog/${encodeURIComponent(post.slug)}`}
-            >
-              <div className="flex flex-col gap-2 bg-white max-w-80 h-full min-h-64 p-4 shadow-md rounded-lg cursor-default">
-                <div
-                  className={`${poppins.className} text-text font-semibold max-md:text-lg md:text-xl`}
-                >
-                  <h3>{post.title}</h3>
-                </div>
-                <div className={`${inter.className} text-textLight`}>
-                  <p>{post.description}</p>
-                </div>
-                <div
-                  className={`${poppins.className} text-secondary cursor-pointer`}
-                >
-                  Read More
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <Suspense fallback={<FeaturedPostsSkeleton />}>
+          <FeaturedPosts />
+        </Suspense>
+
         <Image
           src={heroImageOne}
           alt="hero image one"

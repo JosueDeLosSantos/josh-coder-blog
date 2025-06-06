@@ -85,3 +85,24 @@ export async function BookmarkedPost({ post }: { post: ReadingListType }) {
     </div>
   );
 }
+
+export async function PostSkeleton() {
+  return (
+    <div className="bg-white ">
+      <div className="animate-pulse flex flex-col gap-2 w-full p-4 shadow-md rounded-lg cursor-default">
+        <div className="h-7 w-1/2 bg-text rounded-full mb-2 opacity-50" />
+        <div className="h-5 w-24 bg-textLight rounded-full opacity-50 mb-2" />
+        <div className="flex flex-col gap-2">
+          {[...Array(2)].map((_, j) => (
+            <div
+              key={j}
+              className="h-5 w-full bg-textMild rounded-full opacity-50"
+            />
+          ))}
+        </div>
+        <div className="mt-2 h-6 w-28 bg-secondary rounded-full opacity-50 mb-2" />
+        <div className="bg-primaryLight h-6 w-20 rounded opacity-50" />
+      </div>
+    </div>
+  );
+}

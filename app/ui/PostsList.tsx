@@ -1,10 +1,10 @@
 import { PostType } from "@/app/types";
-import Post, { BookmarkedPost } from "@/app/ui/Post";
+import Post, { BookmarkedPost, PostSkeleton } from "@/app/ui/Post";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { ReadingListType } from "@/lib/definitions";
 
-export default async function PostsList({
+export async function PostsList({
   data,
   query,
   tag,
@@ -109,6 +109,18 @@ export async function BookmarkedPosts({
             <BookmarkedPost post={post} />
           </Link>
         ))}
+    </div>
+  );
+}
+
+export async function PostsListSkeleton() {
+  return (
+    <div className="flex flex-col justify-center max-2xl:gap-5 2xl:gap-6 max-md:mt-8 md:mt-10">
+      {[...Array(6)].map((_, i) => (
+        <div key={i}>
+          <PostSkeleton />
+        </div>
+      ))}
     </div>
   );
 }
