@@ -11,7 +11,6 @@ import { defineQuery } from "next-sanity";
 import { PortableText, PortableTextReactComponents } from "@portabletext/react";
 import { sanityFetch } from "@/sanity/live";
 import { Author } from "@/app/types";
-import { Suspense } from "react";
 
 export default async function About() {
   const AUTHOR_INFO = defineQuery(`*[_type == "author"][0]`);
