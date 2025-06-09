@@ -11,6 +11,7 @@ import { defineQuery } from "next-sanity";
 import { PortableText, PortableTextReactComponents } from "@portabletext/react";
 import { sanityFetch } from "@/sanity/live";
 import { Author } from "@/app/types";
+import { Suspense } from "react";
 
 export default async function About() {
   const AUTHOR_INFO = defineQuery(`*[_type == "author"][0]`);
@@ -40,7 +41,7 @@ export default async function About() {
     <div className="flex flex-col min-h-screen px-8 pb-8 pt-48 md:px-20 2xl:px-40">
       <div className="relative bg-white border border-primaryBorder rounded-lg text-center px-8 md:px-16 pb-8 pt-20 mx-auto max-w-3xl">
         <Image
-          src={profileImage || "https://placehold.co/120x120/png"}
+          src={profileImage || "/profile.png"}
           alt={author.name || "Blog author"}
           className="absolute -top-16 left-1/2 transform -translate-x-1/2 rounded-full ring-1 ring-primaryBorder"
           height="120"
