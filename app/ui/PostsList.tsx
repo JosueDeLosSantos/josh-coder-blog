@@ -3,17 +3,22 @@ import Post, { BookmarkedPost, PostSkeleton } from "@/app/ui/Post";
 import Link from "next/link";
 import { auth } from "@/auth";
 import { ReadingListType } from "@/lib/definitions";
+import { defineQuery } from "next-sanity";
+import { sanityFetch } from "@/sanity/live";
 
 export async function PostsList({
-  data,
   query,
   tag,
 }: {
-  data: PostType[];
   query: string;
   tag: string;
 }) {
-  const posts: PostType[] = data;
+  const ALL_POSTS = defineQuery(
+    `*[_type == "post"] | order(_createdAt desc) {..., createdAt}`
+  );
+  const { data: posts }: { data: PostType[] } = await sanityFetch({
+    query: ALL_POSTS,
+  });
   let filteredPosts: PostType[] = [];
   const session = await auth();
 
